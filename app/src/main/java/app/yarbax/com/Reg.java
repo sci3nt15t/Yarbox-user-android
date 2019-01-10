@@ -21,6 +21,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import app.yarbax.com.Utilities.Network;
+import app.yarbax.com.Utilities.extension;
 
 
 public class Reg extends AppCompatActivity {
@@ -75,7 +76,10 @@ public class Reg extends AppCompatActivity {
                                 if (issuccess.getBoolean("isSuccess")) {
                                     progress.dismiss();
                                     Intent goto_login = new Intent(getApplicationContext(), Approve.class);
-                                    goto_login.putExtra("phone", phone);
+                                    extension converter = new extension();
+                                    String finalphone = converter.ReplaceArabicDigitsWithEnglish(phone)
+                                            .replace("+98","0").replaceAll(" ","");
+                                    goto_login.putExtra("phone", finalphone);
                                     startActivity(goto_login);
                                     finish();
                                 }

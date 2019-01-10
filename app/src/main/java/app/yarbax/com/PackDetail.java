@@ -26,6 +26,7 @@ import com.suke.widget.SwitchButton;
 import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.Getter;
+import app.yarbax.com.Utilities.extension;
 
 /**
  * Created by shayanrhm on 12/30/18.
@@ -120,7 +121,7 @@ public class PackDetail extends AppCompatActivity implements Serializable {
                         if (packprice.getText().toString().length() > 0)
                         newpack.insurancePrice = Integer.parseInt(packprice.getText().toString());
                         newpack.origin.explain = "ندارد";
-                        newpack.count = Integer.parseInt(count.getText().toString());
+                        newpack.count = Integer.parseInt(new extension().ReplaceArabicDigitsWithEnglish(count.getText().toString()));
                         if (newpack.weightId == 999)
                         {
                             new MyAlert(act,"خطا!","وزن بسته را انتخاب نمایید");

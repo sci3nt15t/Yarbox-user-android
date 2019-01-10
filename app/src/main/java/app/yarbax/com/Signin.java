@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.security.cert.Extension;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -53,8 +54,11 @@ public class Signin extends AppCompatActivity {
                     try {
                         if (new CheckInternet().check()) {
                             final Network net = new Network(getApplicationContext());
+                            extension converter = new extension();
+                            String finalphone = converter.ReplaceArabicDigitsWithEnglish(phone.getText().toString())
+                                    .replace("+98","0").replaceAll(" ","");
                             net.execute("http://api.yarbox.co/api/v1/account/retry-verify", "{\n" +
-                                    "  \"phoneNumber\": \"" + phone.getText().toString() + "\"\n" +
+                                    "  \"phoneNumber\": \"" + finalphone + "\"\n" +
                                     "}");
                             final ProgressDialog prog = new ProgressDialog(act);
                             prog.setCancelable(false);

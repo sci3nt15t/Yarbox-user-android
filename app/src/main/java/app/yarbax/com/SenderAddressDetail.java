@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.MyViews.MyAlert;
+import app.yarbax.com.Utilities.*;
 
 /**
  * Created by shayanrhm on 12/31/18.
@@ -55,8 +56,7 @@ public class SenderAddressDetail extends AppCompatActivity {
                 if (address.getText().length() != 0 && plaque.getText().toString().length() != 0 && phone.getText().length() != 0){
                     newpack.origin.street = address.getText().toString();
                     newpack.origin.plaque = plaque.getText().toString();
-                    newpack.origin.senderPhoneNumber = phone.getText().toString();
-
+                    newpack.origin.senderPhoneNumber = new extension().ReplaceArabicDigitsWithEnglish(phone.getText().toString());
                     Intent goto_switch = new Intent(getApplicationContext(),ChooseReciever.class);
                     goto_switch.putExtra("newpack",newpack);
                     startActivity(goto_switch);

@@ -26,6 +26,7 @@ import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.Getter;
 import app.yarbax.com.Utilities.Poster;
+import app.yarbax.com.Utilities.extension;
 
 /**
  * Created by shayanrhm on 12/31/18.
@@ -83,7 +84,7 @@ public class RecieverAddressDetail extends AppCompatActivity {
                     newpack.destination.city = selectedShahr;
                     newpack.destination.street = address.getText().toString();
                     newpack.destination.plaque = plaque.getText().toString();
-                    newpack.destination.receiverPhoneNumber = phone.getText().toString();
+                    newpack.destination.receiverPhoneNumber = new extension().ReplaceArabicDigitsWithEnglish(phone.getText().toString());
                     newpack.destination.receiverName = name.getText().toString();
                     newpack.destination.latitude = "a";
                     newpack.destination.longitude = "a";

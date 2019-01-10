@@ -55,8 +55,9 @@ public class NewFactor extends AppCompatActivity {
     JSONObject sender;
     JSONObject reciever;
     Executor exec = Executors.newFixedThreadPool(2);
-    boolean iscashpayment = false;
+    boolean iscashpayment = true;
     boolean payatorigin = false;
+    boolean isitemselected = false;
     Activity act;
     PostPack newpack;
     @Override
@@ -124,7 +125,7 @@ public class NewFactor extends AppCompatActivity {
                 payonline.setBackgroundDrawable(getResources().getDrawable(R.drawable.gray_btn_curve));
                 paydest.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_btn_curve));
                 payatorigin = false;
-                iscashpayment = true;
+                iscashpayment = false;
             }
         });
         inc_cred = (LinearLayout)findViewById(R.id.factor_increase_cred);
@@ -139,7 +140,7 @@ public class NewFactor extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iscashpayment || payatorigin) {
+                if (isitemselected) {
                     try {
                         if (/** other **/((!iscashpayment && payatorigin) || (iscashpayment && !payatorigin)) /** other **/ ||
                                 /** online **/((iscashpayment && payatorigin) && (credit >= factor_mainjson.getInt("price")))  /** online **/) {

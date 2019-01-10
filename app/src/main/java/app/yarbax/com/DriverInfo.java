@@ -110,7 +110,7 @@ public class DriverInfo extends AppCompatActivity implements OnMapReadyCallback 
                 payment.setText("انلاین");
                 where.setText("مبدا");
             }
-            if (iscash && !payorigin)
+            if (!iscash && !payorigin)
             {
                 payment.setText("نقدی");
                 where.setText("مقصد");
