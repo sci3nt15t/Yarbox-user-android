@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f7f8f8"
+    android:layoutDirection="rtl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#525352"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="درباره ی ما"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/header_text_size"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/aboutuslogo"
+                    android:layout_margin="10dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="22sp"
+                    android:layout_marginBottom="10dp"
+                    android:text="درباره ی ما بیشتر بدانید"
+                    android:textColor="#305285"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="right"
+                    android:layout_gravity="center"
+                    android:lineSpacingExtra="8dp"
+                    android:textSize="19sp"
+                    android:text="@string/aboutus_text"
+                    android:textColor="#000000"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</FrameLayout>

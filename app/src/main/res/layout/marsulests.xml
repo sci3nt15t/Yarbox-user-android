@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_weight="2"
+    android:weightSum="10"
+    android:orientation="vertical">
+    <app.yarbax.com.MyViews.CircularImageView
+        android:id="@+id/marsulests_image"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:src="@mipmap/peyk"/>
+    <TextView
+        android:id="@+id/marsulests_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textAlignment="center"
+        android:layout_weight="2"
+        android:text="تحویل به پیک"/>
+
+</LinearLayout>

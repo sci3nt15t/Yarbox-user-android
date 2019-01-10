@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="2"
+    android:clickable="true"
+    android:layout_marginRight="15dp"
+    android:gravity="center_vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:foregroundGravity="center_vertical"
+        android:id="@+id/menubtn"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:src="@mipmap/menu"
+        android:layout_gravity="right"
+        />
+</LinearLayout>

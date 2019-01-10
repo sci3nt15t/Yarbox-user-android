@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f7f8f8"
+    android:layoutDirection="rtl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_frame">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:weightSum="10">
+            <include layout="@layout/menu_img">
+
+            </include>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="7"
+                android:layout_height="match_parent"
+                android:text="فعالیت ها در یارباکس"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/header_text_size"
+                android:layout_gravity="right|center_vertical"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:weightSum="2"
+            >
+            <Button
+                android:id="@+id/main_proc_btn"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:text="در حال انجام"
+                android:textStyle="bold"
+                android:background="@drawable/tab_stroke"
+                />
+            <Button
+                android:id="@+id/main_inproc_btn"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:text="ناموفق"
+                android:textStyle="bold"
+                android:background="@drawable/tab_stroke"
+                />
+        </LinearLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9.8">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/main_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+        <Button
+            android:id="@+id/newpack"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="-20dp"
+            android:text="ارسال بسته جدید"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:background="@drawable/sendpacketcurve"
+            />
+    </LinearLayout>
+    <include layout="@layout/navigation">
+    </include>
+</RelativeLayout>
