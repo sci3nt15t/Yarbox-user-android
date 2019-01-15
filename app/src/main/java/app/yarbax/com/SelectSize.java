@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -140,8 +141,7 @@ public class SelectSize extends AppCompatActivity implements Serializable {
             {
                 JSONObject vehicle = vehicles.getJSONObject(i);
                 ImageView img = new ImageView(getApplicationContext());
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(400,400);
-                param.setMargins(20,20,20,20);
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 img.setLayoutParams(param);
                 if (i == select)
                 {

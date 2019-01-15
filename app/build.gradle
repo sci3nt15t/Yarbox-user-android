@@ -10,8 +10,8 @@ android {
         applicationId "app.yarbax.com"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 15
-        versionName "1.4"
+        versionCode 19
+        versionName "1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -106,6 +106,7 @@ public class NewFactor extends AppCompatActivity {
                 paydest.setBackgroundDrawable(getResources().getDrawable(R.drawable.gray_btn_curve));
                 payatorigin = true;
                 iscashpayment = false;
+                isitemselected = true;
             }
         });
         payonline.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +117,7 @@ public class NewFactor extends AppCompatActivity {
                 paydest.setBackgroundDrawable(getResources().getDrawable(R.drawable.gray_btn_curve));
                 payatorigin = true;
                 iscashpayment = true;
+                isitemselected = true;
             }
         });
         paydest.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +128,7 @@ public class NewFactor extends AppCompatActivity {
                 paydest.setBackgroundDrawable(getResources().getDrawable(R.drawable.red_btn_curve));
                 payatorigin = false;
                 iscashpayment = false;
+                isitemselected = true;
             }
         });
         inc_cred = (LinearLayout)findViewById(R.id.factor_increase_cred);
@@ -140,9 +143,10 @@ public class NewFactor extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final ProgressDialog prog = new ProgressDialog(act);
                 if (isitemselected) {
                     try {
-                        if (/** other **/((!iscashpayment && payatorigin) || (iscashpayment && !payatorigin)) /** other **/ ||
+                        if (/** other **/((!iscashpayment && payatorigin) || (!iscashpayment && !payatorigin)) /** other **/ ||
                                 /** online **/((iscashpayment && payatorigin) && (credit >= factor_mainjson.getInt("price")))  /** online **/) {
                             String request = "{\n" +
                                     "  \"id\": " + factor_mainjson.getInt("id") + ",\n" +
@@ -151,6 +155,11 @@ public class NewFactor extends AppCompatActivity {
                                     "}";
                             GeneralPoster post = new GeneralPoster();
                             post.execute("http://api.yarbox.co/api/v1/packs/accept", request, token);
+                            prog.setCancelable(false);
+                            prog.setTitle("لطفا منتطر بمانید");
+                            if (prog.isShowing())
+                                prog.dismiss();
+                            prog.show();
                             exec.execute(new Runnable() {
                                 @Override
                                 public void run() {
@@ -175,9 +184,10 @@ public class NewFactor extends AppCompatActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
+                                    if (prog.isShowing())
+                                        prog.dismiss();
                                 }
                             });
-
                         } else if (((iscashpayment && payatorigin) && (credit < factor_mainjson.getInt("price")))) {
                             new MyAlert(act, "خطا!", "اعتبار کافی نیست!");
                         }
