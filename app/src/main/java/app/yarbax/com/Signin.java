@@ -51,7 +51,6 @@ public class Signin extends AppCompatActivity {
             public void onClick(View view) {
                 if (phone.getText().length() == 11)
                 {
-                    try {
                         if (new CheckInternet().check()) {
                             final Network net = new Network(getApplicationContext());
                             extension converter = new extension();
@@ -86,11 +85,7 @@ public class Signin extends AppCompatActivity {
                         }else{
                             Toast.makeText(getApplicationContext(),"لطفا اتصال خود را به اینترنت چک کنید",Toast.LENGTH_LONG).show();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
 
                 }else{
                     new MyAlert(Signin.this,"شماره تلفن","شماره تلفن وارد شده صحیح نیست!");

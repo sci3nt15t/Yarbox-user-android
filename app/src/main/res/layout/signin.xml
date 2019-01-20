@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#f7f8f8"
     android:layoutDirection="rtl"
@@ -11,31 +11,13 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#525352"
-            android:padding="5dp"
-            android:layout_gravity="center"
-            android:gravity="center">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_yarbax"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/header_text_size"
-                android:layout_gravity="center"
-                android:gravity="center"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="10"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_weight="4"
-                android:layout_margin="40dp"
                 android:layout_gravity="center"
                 android:src="@mipmap/login"/>
             <LinearLayout
@@ -74,8 +56,8 @@
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:textColor="#305285"/>
+                    android:layout_marginTop="150dp"
+                    android:textColor="@android:color/black"/>
                 <Button
                     android:id="@+id/login_btn"
                     android:layout_width="match_parent"
@@ -83,14 +65,15 @@
                     android:text="دریافت کد تایید"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"
+                    android:textSize="19sp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/btn_curve"
-                    android:layout_marginTop="100dp"
-                    android:layout_marginRight="60dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_marginLeft="70dp"
                     />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
 
-</FrameLayout>
+</ScrollView>

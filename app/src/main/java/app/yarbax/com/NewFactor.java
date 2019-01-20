@@ -60,11 +60,15 @@ public class NewFactor extends AppCompatActivity {
     boolean isitemselected = false;
     Activity act;
     PostPack newpack;
+    boolean reorder = false;
     @Override
     public void onBackPressed(){
         super.onBackPressed();
         Intent go_back;
-        if (newpack.receiveType.contains("port"))
+        if (reorder)
+            go_back = new Intent(getApplicationContext(),MainActivity.class);
+
+        else if (newpack.receiveType.contains("port"))
             go_back = new Intent(getApplicationContext(),ChoosePort.class);
         else
             go_back = new Intent(getApplicationContext(),RecieverAddressDetail.class);
@@ -82,6 +86,7 @@ public class NewFactor extends AppCompatActivity {
         SharedPreferences p = getSharedPreferences("mypref",MODE_PRIVATE);
         token = p.getString("token","");
         Intent i = getIntent();
+        reorder = i.getBooleanExtra("reorder",false);
         factorkey = i.getStringExtra("key");
         System.out.println(factorkey);
         newpack = (PostPack) i.getSerializableExtra("newpack");

@@ -22,7 +22,7 @@ public class Share extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(android.content.Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(android.content.Intent.EXTRA_TEXT, "http://yarbox.co/");
+                i.putExtra(android.content.Intent.EXTRA_TEXT, "سلام یارباکس اپلیکیشن سریع، ساده و کم هزینه ایست که من برای ارسال خرده بار هام به شهرهای مختلف ازش استفاده می کنم. به شما هم پیشنهاد می کنم از طریق سایت http://www.yarbox.co یارباکس رو دانلود کنی");
                 startActivity(i);
             }
         });

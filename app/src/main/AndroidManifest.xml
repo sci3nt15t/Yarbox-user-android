@@ -9,11 +9,19 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
+        </activity>
+        <activity android:name=".Faq">
+        </activity>
+        <activity android:name=".Help">
+        </activity>
+        <activity android:name=".Support">
+        </activity>
+        <activity android:name=".Inbox">
+        </activity>
+        <activity android:name=".Activities">
         </activity>
         <activity android:name=".Reg">
         </activity>
@@ -62,5 +70,4 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.
    READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
 </manifest>

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="#525352"
+            android:background="#d5d7d7"
             android:padding="5dp"
             android:layout_gravity="center"
             android:gravity="center">
@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="معرفی به دوستان"
-                android:textColor="@android:color/white"
+                android:padding="15dp"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/header_text_size"
                 android:layout_gravity="center"
                 android:gravity="center"/>
@@ -35,41 +36,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ImageView
-                    android:layout_width="140dp"
-                    android:layout_height="140dp"
-                    android:src="@mipmap/sharelogo"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"/>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/appicon"
+                        android:layout_margin="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="10dp"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="22sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="معرفی به دوستان"
+                        android:textColor="@color/colorPrimaryDark"/>
+                </LinearLayout>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="30dp"
                     android:paddingRight="30dp"
-                    android:textAlignment="center"
-                    android:gravity="center"
+                    android:textSize="14sp"
                     android:layout_gravity="center"
-                    android:lineSpacingExtra="5dp"
-                    android:textSize="22sp"
-                    android:text="معرفی به دوستان"
-                    android:textColor="#305285"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:textSize="19sp"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
+                    android:textAlignment="viewStart"
                     android:lineSpacingExtra="8dp"
                     android:gravity="center"
                     android:text="@string/share_text"
                     android:textColor="#000000"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="140dp"
+                    android:text="-------------------- لینک دعوت خود را به اشتراک بگذارید --------------------"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:weightSum="4">

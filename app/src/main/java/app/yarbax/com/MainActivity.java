@@ -1,6 +1,8 @@
 package app.yarbax.com;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -21,11 +24,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +53,7 @@ import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.CheckInternet;
 import app.yarbax.com.Utilities.DateConverter;
 import app.yarbax.com.Utilities.Getter;
+import app.yarbax.com.Utilities.OnSwipeTouchListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -62,6 +69,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int score;
     int credit;
     View navheader;
+    int width;
+    int height;
+    @Override
+    public void onStart(){
+
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Display display = getWindowManager(). getDefaultDisplay();
+                Point size = new Point();
+                display. getSize(size);
+                width = size.x;
+                height = size.y;
+
+                if (new CheckInternet().check()){
+                    fetch_marsuleha();
+                    get_profile();
+                    checkforupdate();
+                }else{
+                    new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
+                }
+            }
+        });
+        super.onStart();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +143,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onRefresh() {
                     fetch_marsuleha();
-                    running.setBackgroundColor(Color.parseColor("#FF4081"));
-                    canceled.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
                     get_profile();
                     swipe.setRefreshing(false);
                 }
@@ -120,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onClick(View view) {
                     running.setBackgroundColor(Color.parseColor("#FF4081"));
                     canceled.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+                    running.setTextColor(Color.WHITE);
+                    canceled.setTextColor(Color.BLACK);
                     setupcells(marsuleha_json, false);
                 }
             });
@@ -128,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onClick(View view) {
                     canceled.setBackgroundColor(Color.parseColor("#FF4081"));
                     running.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+                    running.setTextColor(Color.BLACK);
+                    canceled.setTextColor(Color.WHITE);
                     setupcells(marsuleha_json, true);
                 }
             });
@@ -145,6 +181,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Intent goto_report = new Intent(getApplicationContext(),Reports.class);
                             startActivity(goto_report);
                             break;
+                        case R.id.activities:
+                            Intent goto_activities = new Intent(getApplicationContext(),Activities.class);
+                            startActivity(goto_activities);
+                            break;
+                        case R.id.inbox:
+                            Intent goto_inbox = new Intent(getApplicationContext(),Inbox.class);
+                            startActivity(goto_inbox);
+                            break;
                         case R.id.share:
                             Intent goto_share = new Intent(getApplicationContext(),Share.class);
                             startActivity(goto_share);
@@ -154,21 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             startActivity(goto_about);
                             break;
                         case R.id.support:
-                            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1 );
-                                }else{
-                                    Intent call = new Intent(Intent.ACTION_CALL);
-                                    call.setData(Uri.parse("tel:02141196" ));
-                                    startActivity(call);
-
-                                }
-                            }else{
-                                Intent call = new Intent(Intent.ACTION_CALL);
-                                call.setData(Uri.parse("tel:02141196"));
-                                startActivity(call);
-
-                            }
+                            Intent goto_support = new Intent(getApplicationContext(),Support.class);
+                            startActivity(goto_support);
                             break;
                         case R.id.logout:
                             Intent goto_login = new Intent(getApplicationContext(), Signin.class);
@@ -229,17 +260,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-            try {
-                if (new CheckInternet().check()){
-                    fetch_marsuleha();
-                    get_profile();
-                    checkforupdate();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
     public void checkforupdate(){
@@ -328,7 +348,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public void fetch_marsuleha(){
         final Getter getmarsuleha = new Getter();
-        try {
+        running.setBackgroundColor(Color.parseColor("#FF4081"));
+        canceled.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+        running.setTextColor(Color.WHITE);
+        canceled.setTextColor(Color.BLACK);
             if (new CheckInternet().check())
             {
                 final ProgressDialog prog = new ProgressDialog(act);
@@ -382,27 +405,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 exec = null;
-                if (prog.isShowing())
-                    prog.dismiss();
-
+            }else{
+                new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     public void setupcells(JSONArray data, boolean filter)
     {
         root.removeAllViewsInLayout();
-        if (data != null) {
+        ImageView no = new ImageView(act);
+        LinearLayout.LayoutParams no_param = new LinearLayout.LayoutParams(width/2,width/2);
+        no_param.gravity = Gravity.CENTER;
+        no.setLayoutParams(no_param);
+        no_param.setMargins(0,150,0,0);
+        no.setImageDrawable(getResources().getDrawable(R.mipmap.no_activity));
+        root.addView(no);
 
+        LinearLayout.LayoutParams no_text_param = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView no_text = new TextView(act);
+        no_text.setGravity(Gravity.CENTER);
+        no_text.setTextSize(24);
+        no_text.setLayoutParams(no_text_param);
+        if (!filter)
+            no_text.setText("مرسوله ای برای پیگیری وجود ندارد!");
+        else
+            no_text.setText("مرسوله ی ناموفقی وجود ندارد!");
+        root.addView(no_text);
+        if (data.length() > 0) {
+            root.removeAllViewsInLayout();
             for (int i = 0; i < data.length(); i++) {
                 try {
                     if (data.getJSONObject(i).getBoolean("isCanceled") == filter) {
+
+                        LinearLayout horiz = new LinearLayout(act);
+                        LinearLayout.LayoutParams horizparam = new LinearLayout.LayoutParams(width+400, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        horizparam.setMargins(20, 20, 20, 80);
+                        horiz.setLayoutParams(horizparam);
+                        horiz.setOrientation(LinearLayout.HORIZONTAL);
+
                         LinearLayout pack = new LinearLayout(act);
-                        LinearLayout.LayoutParams packparam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        packparam.setMargins(20, 20, 20, 80);
+                        LinearLayout.LayoutParams packparam = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        packparam.setMargins(60,0,60,0);
                         pack.setLayoutParams(packparam);
                         pack.setOrientation(LinearLayout.VERTICAL);
                         pack.setBackgroundDrawable(getResources().getDrawable(R.drawable.main_packbox_curve));
@@ -532,8 +574,149 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         pack.addView(marsulests_lay);
                         //End of Third Row(Images!)
+                        if (data.getJSONObject(i).getBoolean("isCanceled") == true)
+                        {
+                            LinearLayout.LayoutParams btn_param = new LinearLayout.LayoutParams(200, ViewGroup.LayoutParams.MATCH_PARENT);
+                            final int finalI = i;
 
-                        root.addView(pack);
+                            Button reorder = new Button(this);
+                            reorder.setLayoutParams(btn_param);
+                            reorder.setBackgroundColor(Color.parseColor("#4BAE45"));
+                            reorder.setText("سفارش مجدد");
+                            horiz.addView(reorder);
+                            reorder.setTextColor(Color.WHITE);
+                            reorder.setX(200);
+                            reorder.setAlpha(0);
+                            reorder.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    final ProgressDialog prog = new ProgressDialog(act);
+                                    prog.setCancelable(false);
+                                    prog.setTitle("لطفا منتطر بمانید");
+                                    if (prog.isShowing())
+                                        prog.dismiss();
+                                    prog.show();
+                                    exec = Executors.newFixedThreadPool(2);
+                                    exec.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Getter reorder_pack = new Getter();
+                                            try {
+                                                reorder_pack.execute("http://api.yarbox.co/api/v1/packs/alopeyk/"+data.getJSONObject(finalI).getString("id")+"/re-order",token);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                reorder_pack.get();
+                                                try {
+                                                    String factorkey = new JSONObject(reorder_pack.mainresponse).getString("packKey");
+                                                    Intent goto_factor = new Intent(getApplicationContext(),NewFactor.class);
+                                                    goto_factor.putExtra("key",factorkey);
+                                                    goto_factor.putExtra("reorder",true);
+                                                    startActivity(goto_factor);
+                                                    finish();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } catch (ExecutionException e) {
+                                                e.printStackTrace();
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (prog.isShowing())
+                                                prog.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+
+                            Button delete = new Button(this);
+                            delete.setLayoutParams(btn_param);
+                            delete.setBackgroundColor(Color.RED);
+                            delete.setText("حذف");
+                            delete.setTextColor(Color.WHITE);
+                            horiz.addView(delete);
+                            delete.setX(400);
+                            delete.setAlpha(0);
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    final ProgressDialog prog = new ProgressDialog(act);
+                                    prog.setCancelable(false);
+                                    prog.setTitle("لطفا منتطر بمانید");
+                                    if (prog.isShowing())
+                                        prog.dismiss();
+                                    prog.show();
+                                    exec = Executors.newFixedThreadPool(2);
+                                    exec.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Getter delete_pack = new Getter();
+                                            try {
+                                                delete_pack.execute("http://api.yarbox.co/api/v1/packs/remove?id="+data.getJSONObject(finalI).getString("id"),token);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            try {
+                                                delete_pack.get();
+                                                if (prog.isShowing())
+                                                    prog.dismiss();
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        fetch_marsuleha();
+                                                    }
+                                                });
+                                            } catch (ExecutionException e) {
+                                                e.printStackTrace();
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (prog.isShowing())
+                                                prog.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+
+                            final AnimatorSet mAnimationSet = new AnimatorSet();
+                            pack.setOnTouchListener(new OnSwipeTouchListener(this){
+                                @Override
+                                public void onSwipeLeft() {
+                                    if (delete.getAlpha() == 0) {
+                                        ObjectAnimator hide = ObjectAnimator.ofFloat(pack, "X", pack.getX(), pack.getX() - 400);
+                                        hide.setDuration(200);
+                                        delete.setX(delete.getX() - 400);
+                                        reorder.setX(reorder.getX() - 200);
+                                        delete.setAlpha(1);
+                                        reorder.setAlpha(1);
+                                        mAnimationSet.play(hide);
+                                        mAnimationSet.start();
+                                    }
+                                    super.onSwipeLeft();
+                                }
+
+                                @Override
+                                public void onSwipeRight() {
+                                    if (delete.getAlpha() == 1) {
+                                        ObjectAnimator hide = ObjectAnimator.ofFloat(pack, "X", pack.getX(), pack.getX() + 400);
+                                        hide.setDuration(200);
+                                        delete.setX(delete.getX() + 400);
+                                        reorder.setX(reorder.getX() + 200);
+                                        delete.setAlpha(0);
+                                        reorder.setAlpha(0);
+                                        mAnimationSet.play(hide);
+                                        mAnimationSet.start();
+                                    }
+                                    super.onSwipeRight();
+                                }
+                            });
+                            pack.setX(480);
+                        }else{
+                            pack.setX(80);
+                        }
+                        horiz.addView(pack);
+                        root.addView(horiz);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

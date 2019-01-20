@@ -17,6 +17,20 @@
             android:icon="@mipmap/reports"
             android:title="گزارشات" />
     </group>
+    <group android:id="@+id/id3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/activities"
+            android:icon="@mipmap/activity"
+            android:title="فعالیت ها" />
+    </group>
+    <group android:id="@+id/id10"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/inbox"
+            android:icon="@mipmap/inbox"
+            android:title="صندوق پیام" />
+    </group>
     <group android:id="@+id/id4"
         android:checkableBehavior="single">
         <item

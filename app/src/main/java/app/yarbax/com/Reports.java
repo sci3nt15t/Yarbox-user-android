@@ -89,7 +89,7 @@ public class Reports extends AppCompatActivity {
         });
     }
     public void fetch_reports(){
-        try {
+
             if (new CheckInternet().check())
             {
                 final Getter get_reports = new Getter();
@@ -126,11 +126,7 @@ public class Reports extends AppCompatActivity {
                 });
 
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
     public void setup_reports(String json_str){
         root.removeAllViewsInLayout();

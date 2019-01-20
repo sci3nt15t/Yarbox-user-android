@@ -62,7 +62,7 @@ public class Approve extends AppCompatActivity {
         approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
+
                     if (new CheckInternet().check()) {
                         Network net = new Network(act);
                         net.execute("http://api.yarbox.co/api/v1/account/verify", "" +
@@ -114,11 +114,7 @@ public class Approve extends AppCompatActivity {
                     } else {
                         new MyAlert(act, "خطا!", "اتصال خود را چک کنید!");
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
         resend = (TextView)findViewById(R.id.app_resend);
@@ -140,8 +136,6 @@ public class Approve extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"لطفا اتصال خود را به اینترنت چک کنید",Toast.LENGTH_LONG).show();
                         }
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();

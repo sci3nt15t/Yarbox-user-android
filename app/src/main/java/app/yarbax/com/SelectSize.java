@@ -1,6 +1,7 @@
 package app.yarbax.com;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,11 +46,13 @@ public class SelectSize extends AppCompatActivity implements Serializable {
     Executor exec =  Executors.newFixedThreadPool(2);
     String data;
     String token;
+    Activity act;
     int select = 0;
     @Override
     protected void onCreate(Bundle savedinstace){
         super.onCreate(savedinstace);
         setContentView(R.layout.selectsize);
+        act = this;
         vehicle_view = (LinearLayout)findViewById(R.id.selectsize_vehicleview);
         vehicleimage = (ImageView)findViewById(R.id.vehicleimage);
         type = (TextView)findViewById(R.id.vehicletype);
@@ -68,7 +71,7 @@ public class SelectSize extends AppCompatActivity implements Serializable {
         });
         SharedPreferences p = getSharedPreferences("mypref",MODE_PRIVATE);
         token = p.getString("token","");
-        try {
+
             if (new CheckInternet().check())
             fetchsizes();
             else{
@@ -76,7 +79,7 @@ public class SelectSize extends AppCompatActivity implements Serializable {
                 exec.execute(new Runnable() {
                     @Override
                     public void run() {
-                        try {
+
                             while (!new CheckInternet().check())
                             {
                                 System.out.println("while!");
@@ -87,19 +90,11 @@ public class SelectSize extends AppCompatActivity implements Serializable {
                                     fetchsizes();
                                 }
                             });
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
                     }
                 });
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void fetchsizes(){

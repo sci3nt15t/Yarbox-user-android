@@ -132,27 +132,14 @@ public class DriverInfo extends AppCompatActivity implements OnMapReadyCallback 
             call.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ContextCompat.checkSelfPermission(DriverInfo.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(DriverInfo.this, new String[]{Manifest.permission.CALL_PHONE}, 1 );
-                        }else{
-                            Intent call = new Intent(Intent.ACTION_CALL);
+
+                            Intent call = new Intent(Intent.ACTION_DIAL);
                             try {
                                 call.setData(Uri.parse("tel:" + driver_json.getString("mobile")));
                                 startActivity(call);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        }
-                    }else{
-                        Intent call = new Intent(Intent.ACTION_CALL);
-                        try {
-                            call.setData(Uri.parse("tel:" + driver_json.getString("mobile")));
-                            startActivity(call);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
             });
             name.setText(driver_json.getString("firstName") + " " + driver_json.getString("lastName"));

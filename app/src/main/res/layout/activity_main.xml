@@ -85,7 +85,7 @@
             android:id="@+id/newpack"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginBottom="-20dp"
+            android:layout_marginBottom="-15dp"
             android:text="ارسال بسته جدید"
             android:textColor="@android:color/white"
             android:textStyle="bold"
