@@ -19,7 +19,10 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import app.yarbax.com.MyViews.MyAlert;
+import app.yarbax.com.MyViews.SigninEdittext;
 import app.yarbax.com.Utilities.Network;
 import app.yarbax.com.Utilities.extension;
 
@@ -37,9 +40,9 @@ public class Reg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reg);
         this.act = this;
-        final EditText edit_name = (EditText)findViewById(R.id.reg_name);
-        final EditText edit_last = (EditText)findViewById(R.id.reg_last);
-        final EditText edit_phone = (EditText)findViewById(R.id.reg_phone);
+        final SigninEdittext edit_name = (SigninEdittext)findViewById(R.id.reg_name);
+        final SigninEdittext edit_last = (SigninEdittext)findViewById(R.id.reg_last);
+        final SigninEdittext edit_phone = (SigninEdittext)findViewById(R.id.reg_phone);
         final Button regbtn = (Button)findViewById(R.id.reg_btn);
 
         regbtn.setClickable(false);
@@ -74,7 +77,6 @@ public class Reg extends AppCompatActivity {
                             try {
                                 JSONObject issuccess = new JSONObject(net.mainresponse.toString());
                                 if (issuccess.getBoolean("isSuccess")) {
-                                    progress.dismiss();
                                     Intent goto_login = new Intent(getApplicationContext(), Approve.class);
                                     extension converter = new extension();
                                     String finalphone = converter.ReplaceArabicDigitsWithEnglish(phone)
@@ -82,10 +84,20 @@ public class Reg extends AppCompatActivity {
                                     goto_login.putExtra("phone", finalphone);
                                     startActivity(goto_login);
                                     finish();
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            new MyAlert(act,"خطا!","این شماره قبلا ثبت نام شده!");
+                                        }
+                                    });
                                 }
                             }catch(JSONException e){
                                 e.printStackTrace();
                             }
+                            if(progress.isShowing())
+                                progress.dismiss();
                         }
                     });
                 }else {

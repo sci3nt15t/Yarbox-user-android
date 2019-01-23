@@ -24,6 +24,13 @@
             android:icon="@mipmap/activity"
             android:title="فعالیت ها" />
     </group>
+    <group android:id="@+id/id11"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/favorite_address"
+            android:icon="@mipmap/add"
+            android:title="ادرس های منتخب" />
+    </group>
     <group android:id="@+id/id10"
         android:checkableBehavior="single">
         <item

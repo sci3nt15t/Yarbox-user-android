@@ -1,15 +1,22 @@
 package app.yarbax.com;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.cert.Extension;
@@ -35,6 +42,17 @@ public class Signin extends AppCompatActivity {
     protected void onCreate(Bundle savedinstance){
         super.onCreate(savedinstance);
         setContentView(R.layout.signin);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    5
+            );
+        }
         phone = (SigninEdittext)findViewById(R.id.login_phone);
         login_btn = (Button)findViewById(R.id.login_btn);
         act = this;
@@ -75,20 +93,53 @@ public class Signin extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                     prog.dismiss();
-                                    Intent i = new Intent(getApplicationContext(),Approve.class);
-                                    i.putExtra("phone",phone.getText().toString());
-                                    startActivity(i);
-                                    finish();
+                                    boolean status = false;
+                                    try {
+                                        status = new JSONObject(net.mainresponse).getBoolean("isSuccess");
+                                        if (status) {
+                                            Intent i = new Intent(getApplicationContext(), Approve.class);
+                                            i.putExtra("phone", phone.getText().toString());
+                                            startActivity(i);
+                                            finish();
+                                        }else{
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    new MyAlert(act,"خطا!","این شماره ثبت نام نشده است");
+                                                }
+                                            });
+                                        }
+                                    } catch (JSONException e) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                new MyAlert(act,"خطا!","خطا در دریافت!");
+                                            }
+                                        });
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
 
-                        }else{
-                            Toast.makeText(getApplicationContext(),"لطفا اتصال خود را به اینترنت چک کنید",Toast.LENGTH_LONG).show();
+                        }
+                        else
+                            {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(),"لطفا اتصال خود را به اینترنت چک کنید",Toast.LENGTH_LONG).show();
+                                    }
+                                });
                         }
 
 
                 }else{
-                    new MyAlert(Signin.this,"شماره تلفن","شماره تلفن وارد شده صحیح نیست!");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new MyAlert(Signin.this,"شماره تلفن","شماره تلفن وارد شده صحیح نیست!");
+                        }
+                    });
                 }
             }
         });

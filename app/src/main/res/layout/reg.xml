@@ -79,6 +79,7 @@
                         android:textAlignment="center"
                         android:background="#ebeced"
                         android:inputType="number"
+                        android:maxLength="11"
                         android:textSize="@dimen/edittext_size"
                         android:hint="@string/put_your_number"
                         />

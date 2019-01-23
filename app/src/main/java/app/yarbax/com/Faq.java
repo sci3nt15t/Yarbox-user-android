@@ -29,7 +29,7 @@ public class Faq extends AppCompatActivity{
         super.onCreate(SavedInstance);
         setContentView(R.layout.faq);
         ScrollView scroll = (ScrollView)findViewById(R.id.faq_scroll);
-        ImageView faq_logo = (ImageView)findViewById(R.id.faq_logo);
+        final ImageView faq_logo = (ImageView)findViewById(R.id.faq_logo);
         scroll.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {

@@ -2,15 +2,21 @@ package app.yarbax.com;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+
+import com.suke.widget.SwitchButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +31,7 @@ import java.util.concurrent.Executors;
 import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.Getter;
+import app.yarbax.com.Utilities.MyDb;
 import app.yarbax.com.Utilities.Poster;
 import app.yarbax.com.Utilities.extension;
 
@@ -55,6 +62,7 @@ public class RecieverAddressDetail extends AppCompatActivity {
     GrayEditText plaque;
     GrayEditText phone;
     GrayEditText name;
+    MyDb db = new MyDb();
     @Override
     protected void onCreate(Bundle savedinstance)
     {
@@ -68,10 +76,47 @@ public class RecieverAddressDetail extends AppCompatActivity {
         ostan = (Spinner)findViewById(R.id.rec_ostan);
         shahr = (Spinner)findViewById(R.id.rec_shahr);
         address = (GrayEditText)findViewById(R.id.rec_addr);
+        address.setText(newpack.destination.street);
         plaque = (GrayEditText)findViewById(R.id.rec_plaque);
+        plaque.setText(newpack.destination.plaque);
         phone = (GrayEditText)findViewById(R.id.rec_phone);
+        phone.setText(newpack.destination.receiverPhoneNumber);
         name = (GrayEditText)findViewById(R.id.rec_name);
+        name.setText(newpack.destination.receiverName);
         ok = (Button)findViewById(R.id.rec_ok);
+        SwitchButton add_fav = (SwitchButton)findViewById(R.id.rec_favorit);
+        add_fav.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                AlertDialog.Builder title = new AlertDialog.Builder(act);
+                title.setTitle("لطفا عنوان ادرس را تعیین کنید");
+                final EditText text = new EditText(act);
+                text.setHint("عنوان");
+                title.setView(text);
+                title.setNegativeButton("لفو", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                title.setPositiveButton("تایید", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (text.getText().length() > 0) {
+                            db.insert("INSERT INTO fav(`location`,`address`,`plaque`,`number`,`name`,`title`,`province`,`city`) " +
+                                    "VALUES('dest','" + address.getText() + "','" + plaque.getText() + "','" + phone.getText() + "','" + name.getText() + "','" + text.getText() + "', '" + selectedOstan + "','" + selectedShahr + "' )");
+                            dialogInterface.dismiss();
+                            add_fav.setEnabled(false);
+                            add_fav.setEnableEffect(false);
+                        } else {
+                            new MyAlert(act, "خطا!", "لطفا عنوان را انتخاب نمایید!");
+                        }
+
+                    }
+                });
+                title.show();
+            }
+        });
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +166,17 @@ public class RecieverAddressDetail extends AppCompatActivity {
                 }else{
                     new MyAlert(act,"خطا!","تمامی فیلد ها پر شوند!");
                 }
+            }
+        });
+
+        ImageView fav_address = (ImageView)findViewById(R.id.dest_fav_address);
+        fav_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goto_fav = new Intent(getApplicationContext(),Select_Fav_dest.class);
+                goto_fav.putExtra("newpack",newpack);
+                startActivity(goto_fav);
+                finish();
             }
         });
 
@@ -203,6 +259,9 @@ public class RecieverAddressDetail extends AppCompatActivity {
     ArrayAdapter<String> ostanadapter;
     public void setup_ostan(){
         List<String> ostan_arr = new ArrayList<String>();
+        if (newpack.destination.province != null) {
+            ostan_arr.add(newpack.destination.province);
+        }
         for (int i=0;i<ostans.length();i++)
         {
             try {
@@ -217,6 +276,9 @@ public class RecieverAddressDetail extends AppCompatActivity {
         ostan.setAdapter(ostanadapter);
         try {
             selectedOstan = ostans.getString(0);
+            if (newpack.destination.province != null) {
+                selectedOstan = newpack.destination.province;
+            }
             fetch_shahr();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -241,6 +303,9 @@ public class RecieverAddressDetail extends AppCompatActivity {
     ArrayAdapter<String> shahradapter;
     public void setup_shahr(){
         List<String> shahr_arr = new ArrayList<String>();
+        if (newpack.destination.city !=  null) {
+            shahr_arr.add(newpack.destination.city);
+        }
         for (int i=0;i<shahrs.length();i++)
         {
             try {
@@ -251,6 +316,9 @@ public class RecieverAddressDetail extends AppCompatActivity {
         }
         try {
             selectedShahr = shahrs.getJSONObject(0).getString("name");
+            if (newpack.destination.province != null) {
+                selectedShahr = newpack.destination.city;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

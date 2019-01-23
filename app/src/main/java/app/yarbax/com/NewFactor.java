@@ -153,12 +153,12 @@ public class NewFactor extends AppCompatActivity {
                     try {
                         if (/** other **/((!iscashpayment && payatorigin) || (!iscashpayment && !payatorigin)) /** other **/ ||
                                 /** online **/((iscashpayment && payatorigin) && (credit >= factor_mainjson.getInt("price")))  /** online **/) {
-                            String request = "{\n" +
+                            final String request = "{\n" +
                                     "  \"id\": " + factor_mainjson.getInt("id") + ",\n" +
                                     "  \"payAtOrigin\": " + payatorigin + ",\n" +
                                     "  \"isCashPayment\": " + iscashpayment + "\n" +
                                     "}";
-                            GeneralPoster post = new GeneralPoster();
+                            final GeneralPoster post = new GeneralPoster();
                             post.execute("http://api.yarbox.co/api/v1/packs/accept", request, token);
                             prog.setCancelable(false);
                             prog.setTitle("لطفا منتطر بمانید");

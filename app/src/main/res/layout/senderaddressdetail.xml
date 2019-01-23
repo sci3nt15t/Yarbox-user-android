@@ -81,6 +81,38 @@
             android:inputType="number"
             android:hint="شماره موبایل"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center_vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/star"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:text="افزودن به لیست منتخب"
+                android:textSize="16sp"
+                android:gravity="center|right"
+                android:layout_gravity="center"
+                android:textColor="@android:color/black"/>
+            <com.suke.widget.SwitchButton
+                android:id="@+id/sender_favorit"
+                android:layout_width="0dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+        </LinearLayout>
+
         <Button
             android:id="@+id/sender_ok"
             android:layout_width="match_parent"
@@ -90,7 +122,7 @@
             android:textStyle="bold"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/btn_curve"
             />
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +54,7 @@ import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.CheckInternet;
 import app.yarbax.com.Utilities.DateConverter;
 import app.yarbax.com.Utilities.Getter;
+import app.yarbax.com.Utilities.MyService;
 import app.yarbax.com.Utilities.OnSwipeTouchListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -71,53 +73,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     View navheader;
     int width;
     int height;
-    @Override
-    public void onStart(){
 
-        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Display display = getWindowManager(). getDefaultDisplay();
-                Point size = new Point();
-                display. getSize(size);
-                width = size.x;
-                height = size.y;
-
-                if (new CheckInternet().check()){
-                    fetch_marsuleha();
-                    get_profile();
-                    checkforupdate();
-                }else{
-                    new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
-                }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
             }
-        });
-        super.onStart();
+        }
+        return false;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mypref = getSharedPreferences("mypref",MODE_PRIVATE);
+
+        startService(new Intent(getApplicationContext(), MyService.class));
+
         if (mypref.getString("token","").length() == 0)
         {
             Intent gotosign = new Intent(getApplicationContext(),Signin.class);
-            finish();
+            gotosign.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(gotosign);
-        }else {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                            PackageManager.PERMISSION_GRANTED) {
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        5
-                );
-            }
+            finish();
+        }
+        else
+        {
             token = mypref.getString("token", "");
             act = this;
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -184,6 +166,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         case R.id.activities:
                             Intent goto_activities = new Intent(getApplicationContext(),Activities.class);
                             startActivity(goto_activities);
+                            break;
+                        case R.id.favorite_address:
+                            Intent goto_fav = new Intent(getApplicationContext(),Fav_address.class);
+                            startActivity(goto_fav);
                             break;
                         case R.id.inbox:
                             Intent goto_inbox = new Intent(getApplicationContext(),Inbox.class);
@@ -257,6 +243,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         drawer.setClickable(true);
                         drawer.setFocusable(true);
                         drawer.openDrawer(Gravity.RIGHT);
+                    }
+                }
+            });
+            root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {                root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Display display = getWindowManager(). getDefaultDisplay();
+                    Point size = new Point();
+                    display. getSize(size);
+                    width = size.x;
+                    height = size.y;
+
+                    if (new CheckInternet().check()){
+                        fetch_marsuleha();
+                        get_profile();
+                        checkforupdate();
+                    }else{
+                        new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
                     }
                 }
             });
@@ -352,64 +356,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         canceled.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
         running.setTextColor(Color.WHITE);
         canceled.setTextColor(Color.BLACK);
-            if (new CheckInternet().check())
-            {
-                final ProgressDialog prog = new ProgressDialog(act);
-                prog.setCancelable(false);
-                prog.setTitle("لطفا منتطر بمانید");
-                if (prog.isShowing())
-                    prog.dismiss();
-                prog.show();
-                exec = Executors.newFixedThreadPool(2);
-                exec.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        getmarsuleha.execute("http://api.yarbox.co/api/v1/packs/running",token);
-                        try {
-                            getmarsuleha.get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        marsuleha = getmarsuleha.mainresponse.toString();
-                        try {
-                            marsuleha_json = new JSONObject(marsuleha).getJSONArray("items");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setupcells(marsuleha_json,false);
-                                }
-                            });
-                        } catch (JSONException e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new MyAlert(act,"حطا!","سشن شما به پایان رسیده! لطفا مجددا وارد شوید!");
-                                }
-                            });
-                            e.printStackTrace();
-                            Intent goto_login = new Intent(getApplicationContext(), Signin.class);
-                            SharedPreferences.Editor mypref = getSharedPreferences("mypref",MODE_PRIVATE).edit();
-                            mypref.putString("token","");
-                            mypref.commit();
-                            goto_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(goto_login);
-                            finish();
-                        }
-                        if (prog.isShowing())
-                            prog.dismiss();
-
-                        getmarsuleha.cancel(true);
-
+        if (new CheckInternet().check())
+        {
+            final ProgressDialog prog = new ProgressDialog(act);
+            prog.setCancelable(false);
+            prog.setTitle("لطفا منتطر بمانید");
+            if (prog.isShowing())
+                prog.dismiss();
+            prog.show();
+            exec = Executors.newFixedThreadPool(2);
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getmarsuleha.execute("http://api.yarbox.co/api/v1/packs/running",token);
+                    try {
+                        getmarsuleha.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
-                exec = null;
-            }else{
-                new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
-            }
+                    marsuleha = getmarsuleha.mainresponse.toString();
+                    try {
+                        marsuleha_json = new JSONObject(marsuleha).getJSONArray("items");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setupcells(marsuleha_json,false);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new MyAlert(act,"حطا!","سشن شما به پایان رسیده! لطفا مجددا وارد شوید!");
+                            }
+                        });
+                        e.printStackTrace();
+                        Intent goto_login = new Intent(getApplicationContext(), Signin.class);
+                        SharedPreferences.Editor mypref = getSharedPreferences("mypref",MODE_PRIVATE).edit();
+                        mypref.putString("token","");
+                        mypref.commit();
+                        goto_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(goto_login);
+                        finish();
+                    }
+                    if (prog.isShowing())
+                        prog.dismiss();
+
+                    getmarsuleha.cancel(true);
+
+                }
+            });
+            exec = null;
+        }else{
+            new MyAlert(act,"خطا!","دسترسی خود را با اینترنت چک کنید!");
+        }
     }
-    public void setupcells(JSONArray data, boolean filter)
+    public void setupcells(final JSONArray data, boolean filter)
     {
         root.removeAllViewsInLayout();
         ImageView no = new ImageView(act);
@@ -442,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         horiz.setLayoutParams(horizparam);
                         horiz.setOrientation(LinearLayout.HORIZONTAL);
 
-                        LinearLayout pack = new LinearLayout(act);
+                        final LinearLayout pack = new LinearLayout(act);
                         LinearLayout.LayoutParams packparam = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
                         packparam.setMargins(60,0,60,0);
                         pack.setLayoutParams(packparam);
@@ -579,7 +583,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             LinearLayout.LayoutParams btn_param = new LinearLayout.LayoutParams(200, ViewGroup.LayoutParams.MATCH_PARENT);
                             final int finalI = i;
 
-                            Button reorder = new Button(this);
+                            final Button reorder = new Button(this);
                             reorder.setLayoutParams(btn_param);
                             reorder.setBackgroundColor(Color.parseColor("#4BAE45"));
                             reorder.setText("سفارش مجدد");
@@ -630,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
-                            Button delete = new Button(this);
+                            final Button delete = new Button(this);
                             delete.setLayoutParams(btn_param);
                             delete.setBackgroundColor(Color.RED);
                             delete.setText("حذف");

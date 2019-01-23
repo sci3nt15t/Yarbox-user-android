@@ -135,7 +135,7 @@
             android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:gravity="center"
-            android:hint="ارزش مرسوله خود (تومان)"/>
+            android:hint="ارزش مرسوله خود را وارد نمایید (تومان)"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

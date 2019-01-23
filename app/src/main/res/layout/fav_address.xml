@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f7f8f8"
+    android:layoutDirection="rtl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_frame">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:gravity="center"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="7"
+                android:layout_height="match_parent"
+                android:text="ادرس های منتخب"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/header_text_size"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:weightSum="2"
+            >
+            <Button
+                android:id="@+id/fav_origin"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:text="مبدا"
+                android:textStyle="bold"
+                android:background="@drawable/tab_stroke"
+                />
+            <Button
+                android:id="@+id/fav_dest"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:text="مقصد"
+                android:textStyle="bold"
+                android:background="@drawable/tab_stroke"
+                />
+        </LinearLayout>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="9.8">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/fav_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layoutDirection="rtl"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+        <Button
+            android:id="@+id/fav_add"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="-15dp"
+            android:text="افزودن ادرس جدید"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:background="@drawable/sendpacketcurve"
+            />
+    </LinearLayout>
+</RelativeLayout>
