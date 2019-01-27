@@ -36,7 +36,7 @@
             android:text="آدرس"/>
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/sender_address"
-            android:lines="5"
+            android:lines="10"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:gravity="top|right"

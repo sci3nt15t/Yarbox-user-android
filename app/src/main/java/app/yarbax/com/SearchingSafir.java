@@ -52,10 +52,12 @@ public class SearchingSafir extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Getter cancel_pack = new Getter();
-                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelPack?id="+id,token);
+                GeneralPoster cancel_pack = new GeneralPoster();
+                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelpostpackcustomer?id="+id,"id="+id,token);
                 try {
                     cancel_pack.get();
+                    System.out.println("response: "+cancel_pack.mainresponse);
+                    System.out.println(token);
                     Intent goto_main = new Intent(getApplicationContext(),MainActivity.class);
                     goto_main.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     checkdriver.cancel();
@@ -74,8 +76,8 @@ public class SearchingSafir extends AppCompatActivity {
             @Override
             public void run()
             {
-                Getter cancel_pack = new Getter();
-                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelPack?id="+id,token);
+                GeneralPoster cancel_pack = new GeneralPoster();
+                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelpostpackcustomer?id="+id,"id="+id,token);
                 try {
                     cancel_pack.get();
                     Intent goto_main = new Intent(getApplicationContext(),MainActivity.class);

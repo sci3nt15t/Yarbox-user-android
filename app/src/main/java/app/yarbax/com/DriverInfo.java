@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
+import app.yarbax.com.Utilities.GeneralPoster;
 import app.yarbax.com.Utilities.Getter;
 
 /**
@@ -94,8 +95,8 @@ public class DriverInfo extends AppCompatActivity implements OnMapReadyCallback 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Getter cancel_pack = new Getter();
-                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelPack?id="+id,token);
+                GeneralPoster cancel_pack = new GeneralPoster();
+                cancel_pack.execute("http://api.yarbox.co/api/v1/packs/cancelpostpackcustomer?id="+id,"id="+id,token);
                 try {
                     cancel_pack.get();
                     Intent goto_main = new Intent(getApplicationContext(),MainActivity.class);

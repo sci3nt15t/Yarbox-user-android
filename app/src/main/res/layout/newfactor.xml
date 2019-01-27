@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
-                <app.yarbax.com.MyViews.GrayEditText
+                <app.yarbax.com.MyViews.GrayBorderEditText
                     android:id="@+id/factor_send_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                     android:focusable="false"
                     android:gravity="right"
                     android:text="name"/>
-                <app.yarbax.com.MyViews.GrayEditText
+                <app.yarbax.com.MyViews.GrayBorderEditText
                     android:id="@+id/factor_send_phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_weight="1"
                     android:text="09126500640"/>
             </LinearLayout>
-            <app.yarbax.com.MyViews.GrayEditText
+            <app.yarbax.com.MyViews.GrayBorderEditText
                 android:id="@+id/factor_send_addr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
-                <app.yarbax.com.MyViews.GrayEditText
+                <app.yarbax.com.MyViews.GrayBorderEditText
                     android:id="@+id/factor_rec_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:gravity="right"
                     android:focusable="false"
                     android:text="name"/>
-                <app.yarbax.com.MyViews.GrayEditText
+                <app.yarbax.com.MyViews.GrayBorderEditText
                     android:id="@+id/factor_rec_phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                     android:layout_weight="1"
                     android:text="09126500640"/>
             </LinearLayout>
-            <app.yarbax.com.MyViews.GrayEditText
+            <app.yarbax.com.MyViews.GrayBorderEditText
                 android:id="@+id/factor_rec_addr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

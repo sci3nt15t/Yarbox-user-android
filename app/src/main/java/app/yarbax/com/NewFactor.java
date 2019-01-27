@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import app.yarbax.com.MyViews.GrayBorderEditText;
 import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.MyViews.MyAlert;
 import app.yarbax.com.Utilities.GeneralPoster;
@@ -41,12 +42,12 @@ public class NewFactor extends AppCompatActivity {
 
     String factorkey;
     String token;
-    GrayEditText rec_name;
-    GrayEditText rec_phone;
-    GrayEditText rec_addr;
-    GrayEditText send_name;
-    GrayEditText send_phone;
-    GrayEditText send_addr;
+    GrayBorderEditText rec_name;
+    GrayBorderEditText rec_phone;
+    GrayBorderEditText rec_addr;
+    GrayBorderEditText send_name;
+    GrayBorderEditText send_phone;
+    GrayBorderEditText send_addr;
     ImageView vehicle;
     TextView price;
     Button payorigin;
@@ -123,13 +124,13 @@ public class NewFactor extends AppCompatActivity {
         factorkey = i.getStringExtra("key");
         System.out.println(factorkey);
         newpack = (PostPack) i.getSerializableExtra("newpack");
-        cred = (GrayEditText)findViewById(R.id.factor_cred);
-        rec_name = (GrayEditText)findViewById(R.id.factor_rec_name);
-        rec_phone = (GrayEditText)findViewById(R.id.factor_rec_phone);
-        rec_addr = (GrayEditText)findViewById(R.id.factor_rec_addr);
-        send_name = (GrayEditText)findViewById(R.id.factor_send_name);
-        send_phone = (GrayEditText)findViewById(R.id.factor_send_phone);
-        send_addr = (GrayEditText)findViewById(R.id.factor_send_addr);
+        cred = (GrayEditText) findViewById(R.id.factor_cred);
+        rec_name = (GrayBorderEditText)findViewById(R.id.factor_rec_name);
+        rec_phone = (GrayBorderEditText)findViewById(R.id.factor_rec_phone);
+        rec_addr = (GrayBorderEditText)findViewById(R.id.factor_rec_addr);
+        send_name = (GrayBorderEditText)findViewById(R.id.factor_send_name);
+        send_phone = (GrayBorderEditText)findViewById(R.id.factor_send_phone);
+        send_addr = (GrayBorderEditText)findViewById(R.id.factor_send_addr);
         vehicle = (ImageView)findViewById(R.id.factor_vehicle_type);
         price = (TextView)findViewById(R.id.factor_price);
         payorigin = (Button)findViewById(R.id.factor_payorigin);
@@ -261,7 +262,7 @@ public class NewFactor extends AppCompatActivity {
         try {
             JSONObject cred_json = new JSONObject(get_cred.execute("http://api.yarbox.co/api/v1/account/check",token).get());
             credit = cred_json.getInt("credit");
-            cred.setText(credit+"");
+            cred.setText(String.format("%,.0f", (double) credit));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

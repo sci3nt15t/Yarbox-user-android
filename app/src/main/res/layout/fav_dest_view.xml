@@ -37,6 +37,7 @@
             />
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/fav_dest_view_number"
+            android:maxLength="11"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginRight="30dp"

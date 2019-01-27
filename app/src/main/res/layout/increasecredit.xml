@@ -123,7 +123,7 @@
         android:layout_weight="10"
         android:layout_marginTop="80dp"
         android:inputType="number"
-        android:maxLength="14"
+        android:maxLength="17"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:gravity="center"

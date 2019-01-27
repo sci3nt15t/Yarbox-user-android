@@ -3,6 +3,7 @@ package app.yarbax.com;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Bundle;
@@ -12,11 +13,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
 import com.cedarstudios.cedarmapssdk.model.geocoder.reverse.ReverseGeocode;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,8 +46,9 @@ public class Fav_origin_map extends AppCompatActivity implements OnMapReadyCallb
     Address bestMatch;
     Button ok;
     Activity act;
-    Double lat;
-    Double lng;
+    Double lat = 35.705655;
+    Double lng = 51.390319;
+    SharedPreferences pref;
 
     @Override
     public void onBackPressed(){
@@ -71,6 +80,12 @@ public class Fav_origin_map extends AppCompatActivity implements OnMapReadyCallb
         });
         toolbar_title.setText("انتخاب مبدا");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        pref = getSharedPreferences("mypref",MODE_PRIVATE);
+        if (pref.getString("crlat","").length() > 0)
+            lat = Double.parseDouble(pref.getString("crlat",""));
+        if (pref.getString("crlat","").length() > 0)
+            lng = Double.parseDouble(pref.getString("crlat",""));
 
         final Intent i = getIntent();
         //newpack = (PostPack) i.getSerializableExtra("newpack");
@@ -104,20 +119,60 @@ public class Fav_origin_map extends AppCompatActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fav_map);
         mapFragment.getMapAsync(this);
+        ImageView crlocation = (ImageView)findViewById(R.id.fav_map_cr);
+        crlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(pref.getString("crlat","")),Double.parseDouble(pref.getString("crlng",""))),15));
+            }
+        });
         if(i.getIntExtra("id",0) == 0)
         {
-        getaddressfromcedar(35.705655,51.390319);
-        lat = 35.705655;
-        lng = 51.390319;
+        getaddressfromcedar(lat,lng);
+        lat = lat;
+        lng = lng;
         }else{
             lat = i.getDoubleExtra("lat",0.0);
             lng = i.getDoubleExtra("lng",0.0);
             getaddressfromcedar(lat,lng);
         }
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.fav_place_autocomplete_fragment);
+        AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                .setCountry("IR")
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build();
+        autocompleteFragment.setFilter(filter);
+        maptext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                                    .build(act);
+                    startActivityForResult(intent,1);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
+
+            }
+        });
 
     }
     GoogleMap map;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),15));
+            }
+        }
 
+    }
     public void getaddressfromcedar(Double lat,Double lng){
         CedarMaps.getInstance().reverseGeocode(new com.mapbox.mapboxsdk.geometry.LatLng(lat, lng), new ReverseGeocodeResultListener() {
             @Override
@@ -150,7 +205,7 @@ public class Fav_origin_map extends AppCompatActivity implements OnMapReadyCallb
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lng),12));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(pref.getString("crlat","")),Double.parseDouble(pref.getString("crlng",""))),15));
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override

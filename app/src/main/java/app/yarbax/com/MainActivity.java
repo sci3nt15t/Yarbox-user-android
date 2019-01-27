@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             TextView head_cred = (TextView)navheader.findViewById(R.id.header_cred);
                             name.setText(mypref.getString("name",""));
                             head_score.setText("امتیاز : " + score);
-                            head_cred.setText("کیف پول : " + credit);
+                            head_cred.setText("کیف پول : " + String.format("%,.0f", (double) credit ));
                         }
                     });
                 } catch (JSONException e) {
@@ -449,11 +449,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayout.LayoutParams no_param = new LinearLayout.LayoutParams(width/2,width/2);
         no_param.gravity = Gravity.CENTER;
         no.setLayoutParams(no_param);
-        no_param.setMargins(0,150,0,0);
+        no_param.setMargins(0,350,0,0);
         no.setImageDrawable(getResources().getDrawable(R.mipmap.no_activity));
         root.addView(no);
 
         LinearLayout.LayoutParams no_text_param = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        no_text_param.setMargins(0,30,0,0);
         TextView no_text = new TextView(act);
         no_text.setGravity(Gravity.CENTER);
         no_text.setTextSize(24);
@@ -467,7 +468,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for (int i = 0; i < data.length(); i++) {
                 try {
                     if (data.getJSONObject(i).getBoolean("isCanceled") == filter) {
-                        root.removeAllViewsInLayout();
+                        if (i == 0) root.removeAllViewsInLayout();
                         LinearLayout horiz = new LinearLayout(act);
                         LinearLayout.LayoutParams horizparam = new LinearLayout.LayoutParams(width+400, ViewGroup.LayoutParams.WRAP_CONTENT);
                         horizparam.setMargins(20, 20, 20, 80);

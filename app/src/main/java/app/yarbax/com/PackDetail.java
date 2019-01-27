@@ -124,8 +124,10 @@ public class PackDetail extends AppCompatActivity implements Serializable {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 packprice.removeTextChangedListener(this);
                 if (packprice.getText().length() > 0) {
-                    money = Integer.parseInt(packprice.getText().toString().replace(" تومان ", "").replace(",", ""));
-                    packprice.setText(String.format("%,.0f", (double) money) + " تومان ");
+                    money = Integer.parseInt(packprice.getText().toString().replace("تومان", "").replace(",", "").replace(" ",""));
+                    int position = packprice.getSelectionStart();
+                    packprice.setText(String.format("%,.0f", (double) money) + " تومان");
+                    packprice.setSelection(position);
                 }
                 packprice.addTextChangedListener(this);
             }
@@ -133,7 +135,7 @@ public class PackDetail extends AppCompatActivity implements Serializable {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (packprice.getText().toString().length() > 0)
-                    money = Integer.parseInt(packprice.getText().toString().replace(" تومان ", "").replace(",", ""));
+                    money = Integer.parseInt(packprice.getText().toString().replace("تومان", "").replace(",", "").replace(" ",""));
 
             }
         });

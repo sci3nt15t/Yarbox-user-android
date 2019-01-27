@@ -38,6 +38,7 @@ dependencies {
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
     //noinspection GradleCompatible
     compile 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-places:16.0.0'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

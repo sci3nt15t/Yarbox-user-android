@@ -179,8 +179,10 @@ public class IncreaseCredit extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 price.removeTextChangedListener(this);
                 if (price.getText().length() > 0) {
-                    money = Integer.parseInt(price.getText().toString().replace(" تومان ", "").replace(",", ""));
-                    price.setText(String.format("%,.0f", (double) money) + " تومان ");
+                    money = Integer.parseInt(price.getText().toString().replace("تومان", "").replace(",", "").replace(" ",""));
+                    int position = price.getSelectionStart();
+                    price.setText(String.format("%,.0f", (double) money) + " تومان");
+                    price.setSelection(position);
                 }
                 price.addTextChangedListener(this);
             }
@@ -188,8 +190,7 @@ public class IncreaseCredit extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (price.getText().toString().length() > 0)
-                    money = Integer.parseInt(price.getText().toString().replace(" تومان ", "").replace(",", ""));
-
+                    money = Integer.parseInt(price.getText().toString().replace("تومان", "").replace(",", "").replace(" ",""));
             }
         });
         price.setOnKeyListener(new View.OnKeyListener() {

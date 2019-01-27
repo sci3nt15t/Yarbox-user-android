@@ -15,6 +15,17 @@
     </fragment>
 
     <include layout="@layout/toolbar"></include>
+    <fragment
+        android:id="@+id/fav_place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="right"
+        android:focusable="false"
+        android:foregroundGravity="left"/>
     <app.yarbax.com.MyViews.SigninEdittext
         android:id="@+id/fav_map_text"
         android:layout_width="match_parent"
@@ -30,6 +41,15 @@
         android:layout_height="70dp"
         android:src="@mipmap/mapmarker"
         android:layout_centerInParent="true"/>
+    <ImageView
+        android:id="@+id/fav_map_cr"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@id/fav_map_ok"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/crlocation"
+        />
     <Button
         android:id="@+id/fav_map_ok"
         android:layout_width="match_parent"

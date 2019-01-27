@@ -63,6 +63,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:textAlignment="center"
+            android:maxLength="5"
             android:gravity="center"
             android:hint="پلاک"/>
         <app.yarbax.com.MyViews.GrayEditText
