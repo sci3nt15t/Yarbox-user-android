@@ -1,11 +1,16 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -77,11 +82,39 @@ public class NewFactor extends AppCompatActivity {
         startActivity(go_back);
         finish();
     }
+    public void goback(){
+        Intent go_back;
+        if (reorder)
+            go_back = new Intent(getApplicationContext(),MainActivity.class);
+
+        else if (newpack.receiveType.contains("port"))
+            go_back = new Intent(getApplicationContext(),ChoosePort.class);
+        else
+            go_back = new Intent(getApplicationContext(),RecieverAddressDetail.class);
+
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedinstace)
     {
         super.onCreate(savedinstace);
         setContentView(R.layout.newfactor);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("فاکتور مرسوله");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         SharedPreferences p = getSharedPreferences("mypref",MODE_PRIVATE);
         token = p.getString("token","");
@@ -148,7 +181,6 @@ public class NewFactor extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ProgressDialog prog = new ProgressDialog(act);
                 if (isitemselected) {
                     try {
                         if (/** other **/((!iscashpayment && payatorigin) || (!iscashpayment && !payatorigin)) /** other **/ ||
@@ -160,10 +192,15 @@ public class NewFactor extends AppCompatActivity {
                                     "}";
                             final GeneralPoster post = new GeneralPoster();
                             post.execute("http://api.yarbox.co/api/v1/packs/accept", request, token);
+                            View loading;
+                            LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            loading = pinflate.inflate(R.layout.loading, null);
+                            loading.setBackgroundColor(Color.TRANSPARENT);
+                            AlertDialog prog = new AlertDialog.Builder(act).create();
+                            prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            prog.setInverseBackgroundForced(true);
+                            prog.setView(loading);
                             prog.setCancelable(false);
-                            prog.setTitle("لطفا منتطر بمانید");
-                            if (prog.isShowing())
-                                prog.dismiss();
                             prog.show();
                             exec.execute(new Runnable() {
                                 @Override
@@ -189,7 +226,6 @@ public class NewFactor extends AppCompatActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    if (prog.isShowing())
                                         prog.dismiss();
                                 }
                             });
@@ -235,11 +271,15 @@ public class NewFactor extends AppCompatActivity {
         }
     }
     public void fetch_factor(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        AlertDialog prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -274,7 +314,7 @@ public class NewFactor extends AppCompatActivity {
                                         vehicle.setImageDrawable(getResources().getDrawable(R.mipmap.vanetcolor));
                                         break;
                                 }
-                                price.setText(factor_mainjson.getInt("price")+"");
+                                price.setText(String.format("%,.0f", (double) factor_mainjson.getInt("price")) + " تومان ");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -290,7 +330,6 @@ public class NewFactor extends AppCompatActivity {
                 }
 
 
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });

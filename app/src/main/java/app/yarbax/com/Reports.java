@@ -1,9 +1,13 @@
 package app.yarbax.com;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -44,11 +48,29 @@ public class Reports extends AppCompatActivity {
     LinearLayout root;
     Button wallet;
     Button paid;
-    ProgressDialog prog;
+    AlertDialog prog;
+    Activity act;
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reports);
+        act = this;
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("گزارشات");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         SharedPreferences mypref = getSharedPreferences("mypref",MODE_PRIVATE);
         token = mypref.getString("token","");
         root = (LinearLayout)findViewById(R.id.reports_root);
@@ -56,11 +78,15 @@ public class Reports extends AppCompatActivity {
         paid = (Button)findViewById(R.id.wallet_paid);
         wallet.setBackgroundColor(Color.parseColor("#FF4081"));
         paid.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+        wallet.setTextColor(Color.WHITE);
+        paid.setTextColor(Color.BLACK);
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 wallet.setBackgroundColor(Color.parseColor("#FF4081"));
                 paid.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+                wallet.setTextColor(Color.WHITE);
+                paid.setTextColor(Color.BLACK);
                 setup_reports(wallets);
             }
         });
@@ -69,17 +95,23 @@ public class Reports extends AppCompatActivity {
             public void onClick(View view) {
                 paid.setBackgroundColor(Color.parseColor("#FF4081"));
                 wallet.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
+                wallet.setTextColor(Color.BLACK);
+                paid.setTextColor(Color.WHITE);
                 setup_reports(wallets_paid);
             }
         });
 
         final Getter getmarsuleha = new Getter();
         getmarsuleha.execute("http://api.yarbox.co/api/v1/packs/running",token);
-        prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+         prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -152,7 +184,7 @@ public class Reports extends AppCompatActivity {
                     String completedate = converter.getYear() + "/" + converter.getMonth() + "/" + converter.getDay();
                     cell_date.setText(completedate);
                     TextView cell_price = (TextView) v.findViewById(R.id.report_cell_price);
-                    cell_price.setText(price + "");
+                    cell_price.setText(String.format("%,.0f", (double) price));
                     TextView cell_type = (TextView) v.findViewById(R.id.cell_type);
                     if (payment_type.contains("debtor"))
                         cell_type.setText("واریز");
@@ -169,7 +201,6 @@ public class Reports extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (prog.isShowing())
             prog.dismiss();
     }
 }

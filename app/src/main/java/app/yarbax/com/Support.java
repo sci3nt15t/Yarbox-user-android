@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * Created by shayanrhm on 1/18/19.
@@ -20,11 +21,28 @@ import android.widget.ImageButton;
 public class Support extends AppCompatActivity {
 
 
+    public void goback()
+    {
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstance){
         super.onCreate(SavedInstance);
         setContentView(R.layout.support);
 
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("پشتیبانی");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Button faq = (Button)findViewById(R.id.faq_btn);
         faq.setOnClickListener(new View.OnClickListener() {
             @Override

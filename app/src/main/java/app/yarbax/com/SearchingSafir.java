@@ -32,6 +32,13 @@ public class SearchingSafir extends AppCompatActivity {
 
     Timer driver_timer;
     TimerTask checkdriver;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        return;
+    }
+
     @Override
     protected void onCreate(Bundle savedinstance)
     {

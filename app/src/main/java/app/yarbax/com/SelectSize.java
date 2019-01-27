@@ -2,11 +2,17 @@ package app.yarbax.com;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,6 +23,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -53,6 +60,20 @@ public class SelectSize extends AppCompatActivity implements Serializable {
         super.onCreate(savedinstace);
         setContentView(R.layout.selectsize);
         act = this;
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("انتخاب وسیله ی نقلیه");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         vehicle_view = (LinearLayout)findViewById(R.id.selectsize_vehicleview);
         vehicleimage = (ImageView)findViewById(R.id.vehicleimage);
         type = (TextView)findViewById(R.id.vehicletype);
@@ -76,31 +97,21 @@ public class SelectSize extends AppCompatActivity implements Serializable {
             fetchsizes();
             else{
                 new MyAlert(this,"خطا","دسترسی خود را به اینترنت چک کنید!");
-                exec.execute(new Runnable() {
-                    @Override
-                    public void run() {
-
-                            while (!new CheckInternet().check())
-                            {
-                                System.out.println("while!");
-                            }
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    fetchsizes();
-                                }
-                            });
-
-                    }
-                });
+                goback();
             }
 
     }
 
     public void fetchsizes(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        AlertDialog prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -122,7 +133,7 @@ public class SelectSize extends AppCompatActivity implements Serializable {
                         setupsizes(select);
                     }
                 });
-                if (prog.isShowing())
+
                     prog.dismiss();
             }
         });
@@ -208,6 +219,11 @@ public class SelectSize extends AppCompatActivity implements Serializable {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
+        Intent goto_main = new Intent(this,MainActivity.class);
+        startActivity(goto_main);
+        finish();
+    }
+    public void goback(){
         Intent goto_main = new Intent(this,MainActivity.class);
         startActivity(goto_main);
         finish();

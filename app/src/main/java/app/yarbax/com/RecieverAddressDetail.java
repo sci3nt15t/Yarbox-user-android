@@ -2,12 +2,16 @@ package app.yarbax.com;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.suke.widget.SwitchButton;
 
@@ -58,6 +63,12 @@ public class RecieverAddressDetail extends AppCompatActivity {
         startActivity(go_back);
         finish();
     }
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),ChooseReciever.class);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
+    }
     GrayEditText address;
     GrayEditText plaque;
     GrayEditText phone;
@@ -68,6 +79,20 @@ public class RecieverAddressDetail extends AppCompatActivity {
     {
         super.onCreate(savedinstance);
         setContentView(R.layout.recieveraddressdetail);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.rec_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.rec_toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("اطلاعات گیرنده");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         SharedPreferences p = getSharedPreferences("mypref",MODE_PRIVATE);
         Intent i = getIntent();
@@ -85,11 +110,15 @@ public class RecieverAddressDetail extends AppCompatActivity {
         name.setText(newpack.destination.receiverName);
         ok = (Button)findViewById(R.id.rec_ok);
         SwitchButton add_fav = (SwitchButton)findViewById(R.id.rec_favorit);
+        if (i.getBooleanExtra("ischecked",false)) {
+            add_fav.setChecked(true);
+            add_fav.setEnabled(false);
+        }
         add_fav.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 AlertDialog.Builder title = new AlertDialog.Builder(act);
-                title.setTitle("لطفا عنوان ادرس را تعیین کنید");
+                title.setTitle("لطفا عنوان آدرس را تعیین کنید");
                 final EditText text = new EditText(act);
                 text.setHint("عنوان");
                 title.setView(text);
@@ -97,6 +126,7 @@ public class RecieverAddressDetail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
+                        add_fav.setChecked(false);
                     }
                 });
                 title.setPositiveButton("تایید", new DialogInterface.OnClickListener() {
@@ -134,11 +164,15 @@ public class RecieverAddressDetail extends AppCompatActivity {
                     newpack.destination.latitude = "a";
                     newpack.destination.longitude = "a";
                     System.out.println(newpack.post());
-                    final ProgressDialog prog = new ProgressDialog(act);
+                    View loading;
+                    LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    loading = pinflate.inflate(R.layout.loading, null);
+                    loading.setBackgroundColor(Color.TRANSPARENT);
+                    android.app.AlertDialog prog = new android.app.AlertDialog.Builder(act).create();
+                    prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    prog.setInverseBackgroundForced(true);
+                    prog.setView(loading);
                     prog.setCancelable(false);
-                    prog.setTitle("لطفا منتطر بمانید");
-                    if (prog.isShowing())
-                        prog.dismiss();
                     prog.show();
                     exec.execute(new Runnable() {
                         @Override
@@ -148,7 +182,6 @@ public class RecieverAddressDetail extends AppCompatActivity {
                                 post.execute("http://api.yarbox.co/api/v1/packs",newpack.post(),token);
                                 post.get();
                                 factorKey = post.factorkey;
-
                                 Intent goto_factor = new Intent(getApplicationContext(),NewFactor.class);
                                 goto_factor.putExtra("key",factorKey);
                                 goto_factor.putExtra("newpack",newpack);
@@ -159,7 +192,6 @@ public class RecieverAddressDetail extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            if (prog.isShowing())
                                 prog.dismiss();
                         }
                     });
@@ -190,22 +222,24 @@ public class RecieverAddressDetail extends AppCompatActivity {
     String selectedOstan;
     String selectedShahr;
     public void fetch_ostan(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        android.app.AlertDialog prog = new android.app.AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
             public void run() {
                 Getter get_ostan = new Getter();
                 get_ostan.execute("http://api.yarbox.co/api/v1/provinces",token);
-                while (get_ostan.mainresponse.length() == 0)
-                {
-                    System.out.println("while!");
-                }
                 try {
+
+                    get_ostan.get();
                     System.out.println(get_ostan.mainresponse);
                     ostans = new JSONObject(get_ostan.mainresponse).getJSONArray("items");
                     runOnUiThread(new Runnable() {
@@ -216,18 +250,25 @@ public class RecieverAddressDetail extends AppCompatActivity {
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
-                if (prog.isShowing())
-                    prog.dismiss();
+                prog.dismiss();
             }
         });
     }
     public void fetch_shahr(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        android.app.AlertDialog prog = new android.app.AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -235,11 +276,8 @@ public class RecieverAddressDetail extends AppCompatActivity {
                 Getter get_shahr = new Getter();
                 get_shahr.execute("http://api.yarbox.co/api/v1/provinces/"+selectedOstan+"/GetCityByType?type=1",token);
 
-                while (get_shahr.mainresponse.length() == 0)
-                {
-                    System.out.println("while!");
-                }
                 try {
+                    get_shahr.get();
                     System.out.println(get_shahr.mainresponse);
                     shahrs = new JSONObject(get_shahr.mainresponse).getJSONArray("items");
                     runOnUiThread(new Runnable() {
@@ -250,9 +288,12 @@ public class RecieverAddressDetail extends AppCompatActivity {
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
-                if (prog.isShowing())
-                    prog.dismiss();
+                prog.dismiss();
             }
         });
     }

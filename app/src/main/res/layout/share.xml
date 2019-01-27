@@ -11,24 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#d5d7d7"
-            android:padding="5dp"
-            android:layout_gravity="center"
-            android:gravity="center">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="معرفی به دوستان"
-                android:padding="15dp"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/header_text_size"
-                android:layout_gravity="center"
-                android:gravity="center"/>
-        </LinearLayout>
+        <include layout="@layout/toolbar"></include>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

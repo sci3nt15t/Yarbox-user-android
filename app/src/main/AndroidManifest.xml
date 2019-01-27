@@ -17,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Profile" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".First_Factor" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".Second_Factor" android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".Select_Fav_dest"
             android:screenOrientation="portrait">
         </activity>
@@ -96,9 +102,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".RecieverAddressDetail"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".OrderVehicleSelect"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".Signin"

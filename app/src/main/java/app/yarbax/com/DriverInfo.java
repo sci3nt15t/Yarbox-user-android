@@ -58,6 +58,13 @@ public class DriverInfo extends AppCompatActivity implements OnMapReadyCallback 
     int id;
     boolean iscash;
     boolean payorigin;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        return;
+    }
+
     @Override
     protected void onCreate(Bundle savedinstance)
     {

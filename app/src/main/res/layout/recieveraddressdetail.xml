@@ -7,31 +7,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
         android:layoutDirection="rtl"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:background="#CDCDCD"
-            android:gravity="center"
-            android:weightSum="10">
-            <ImageView
-                android:id="@+id/dest_fav_address"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@mipmap/dest_fav_address"
-                android:layout_gravity="right"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="10"
-                android:layout_height="match_parent"
-                android:text="ادرس گیرنده"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/header_text_size"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:gravity="center"/>
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="ltr">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/rec_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                style="@style/HeaderBar"
+                app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                android:elevation="4dp"
+                >
+                <TextView
+                    android:id="@+id/rec_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:layout_gravity="center" />
+                <ImageView
+                    android:id="@+id/dest_fav_address"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/star"
+                    android:layout_gravity="right"/>
+            </android.support.v7.widget.Toolbar>
         </LinearLayout>
 
         <Spinner
@@ -65,17 +69,18 @@
             android:layout_marginTop="10dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:text="ادرس"/>
+            android:text="آدرس"/>
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/rec_addr"
             android:lines="5"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:gravity="top|right"
+            android:maxLength="500"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
-            android:hint="ادرس"
+            android:hint="آدرس"
             />
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/rec_plaque"
@@ -83,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
+            android:maxLength="5"
             android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:gravity="center"
@@ -96,6 +102,7 @@
             android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:gravity="center"
+            android:maxLength="100"
             android:hint="نام گیرنده"/>
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/rec_phone"
@@ -104,6 +111,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:maxLength="11"
             android:textAlignment="center"
             android:gravity="center"
             android:inputType="number"
@@ -115,7 +123,7 @@
             android:orientation="horizontal"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             android:gravity="center_vertical"
             android:weightSum="10">
             <ImageView
@@ -150,7 +158,7 @@
             android:textStyle="bold"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/btn_curve"
             />
 

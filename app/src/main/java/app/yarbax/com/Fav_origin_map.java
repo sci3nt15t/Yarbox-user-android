@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
@@ -29,7 +31,7 @@ import app.yarbax.com.MyViews.SigninEdittext;
  * Created by shayanrhm on 12/30/18.
  */
 
-public class Fav_origin_map extends FragmentActivity implements OnMapReadyCallback {
+public class Fav_origin_map extends AppCompatActivity implements OnMapReadyCallback {
 
 
     SigninEdittext maptext;
@@ -47,10 +49,29 @@ public class Fav_origin_map extends FragmentActivity implements OnMapReadyCallba
         finish();
     }
 
+    public void goback(){
+        Intent go_back = new Intent(act,Fav_address.class);
+        startActivity(go_back);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedinstace) {
         super.onCreate(savedinstace);
         setContentView(R.layout.fav_address_map);
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("انتخاب مبدا");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         final Intent i = getIntent();
         //newpack = (PostPack) i.getSerializableExtra("newpack");
         act = this;
@@ -130,6 +151,7 @@ public class Fav_origin_map extends FragmentActivity implements OnMapReadyCallba
             return;
         }
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lng),12));
+        googleMap.setMyLocationEnabled(true);
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {

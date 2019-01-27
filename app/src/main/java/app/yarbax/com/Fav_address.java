@@ -37,11 +37,28 @@ public class Fav_address extends AppCompatActivity implements ActionSheet.Action
     MyDb db = new MyDb();
     Activity act;
     LinearLayout root;
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstance)
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.fav_address);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("آدرس های منتخب");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         root = (LinearLayout)findViewById(R.id.fav_root);
         Button ok = (Button)findViewById(R.id.fav_add);
@@ -104,16 +121,16 @@ public class Fav_address extends AppCompatActivity implements ActionSheet.Action
             TextView title = new TextView(act);
             title.setPadding(0,10,30,0);
             title.setText("عنوان : " + crs.getString(0));
-            title.setTextColor(Color.BLACK);
+            title.setTextColor(Color.DKGRAY);
             title.setTextSize(20);
             pack.addView(title);
 
             TextView address = new TextView(act);
             address.setPadding(0,10,30,0);
-            address.setTextColor(Color.BLACK);
+            address.setTextColor(Color.DKGRAY);
             address.setTextSize(20);
             address.setTextDirection(View.TEXT_DIRECTION_RTL);
-            address.setText("ادرس‌ : " + crs.getString(1) + " - " + crs.getString(2) + " - " + crs.getString(3));
+            address.setText("آدرس‌ : " + crs.getString(1) + " - " + crs.getString(2) + " - " + crs.getString(3));
             pack.addView(address);
 
             final int id = crs.getInt(4);

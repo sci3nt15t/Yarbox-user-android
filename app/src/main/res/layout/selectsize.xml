@@ -11,30 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="10">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:background="#CDCDCD"
-            android:gravity="center_vertical"
-            android:weightSum="10">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_gravity="left|center_vertical"
-                android:src="@mipmap/selectsizeheader"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="8"
-                android:layout_height="match_parent"
-                android:text="انتقال وسیله نقلیه تا پورت مبدا"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/header_text_size"
-                android:layout_gravity="right|center_vertical"
-                android:gravity="right|center_vertical"/>
-        </LinearLayout>
+        <include layout="@layout/toolbar"></include>
 
         <LinearLayout
             android:layout_width="match_parent"

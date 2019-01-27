@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +14,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,9 +37,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         mypref = getSharedPreferences("mypref",MODE_PRIVATE);
 
         startService(new Intent(getApplicationContext(), MyService.class));
@@ -100,11 +107,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_GRANTED) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE},
+                        5
+                );
+            }
             token = mypref.getString("token", "");
             act = this;
             final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             final NavigationView nav = (NavigationView) drawer.findViewById(R.id.nav_view);
             navheader = nav.getHeaderView(0);
+            navheader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent goto_profile = new Intent(getApplicationContext(),Profile.class);
+                    startActivity(goto_profile);
+                }
+            });
             nav.setItemIconTintList(null);
             final SwipeRefreshLayout swipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
             Button goto_newpack = (Button) findViewById(R.id.newpack);
@@ -136,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     canceled.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
                     running.setTextColor(Color.WHITE);
                     canceled.setTextColor(Color.BLACK);
+                    if (marsuleha_json != null)
                     setupcells(marsuleha_json, false);
                 }
             });
@@ -146,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     running.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_stroke));
                     running.setTextColor(Color.BLACK);
                     canceled.setTextColor(Color.WHITE);
+                    if (marsuleha_json != null)
                     setupcells(marsuleha_json, true);
                 }
             });
@@ -358,11 +385,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         canceled.setTextColor(Color.BLACK);
         if (new CheckInternet().check())
         {
-            final ProgressDialog prog = new ProgressDialog(act);
+            View loading;
+            LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            loading = pinflate.inflate(R.layout.loading, null);
+            loading.setBackgroundColor(Color.TRANSPARENT);
+            AlertDialog prog = new AlertDialog.Builder(act).create();
+            prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            prog.setInverseBackgroundForced(true);
+            prog.setView(loading);
             prog.setCancelable(false);
-            prog.setTitle("لطفا منتطر بمانید");
-            if (prog.isShowing())
-                prog.dismiss();
             prog.show();
             exec = Executors.newFixedThreadPool(2);
             exec.execute(new Runnable() {
@@ -401,9 +432,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         startActivity(goto_login);
                         finish();
                     }
-                    if (prog.isShowing())
-                        prog.dismiss();
-
+                    prog.dismiss();
                     getmarsuleha.cancel(true);
 
                 }
@@ -435,11 +464,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             no_text.setText("مرسوله ی ناموفقی وجود ندارد!");
         root.addView(no_text);
         if (data.length() > 0) {
-            root.removeAllViewsInLayout();
             for (int i = 0; i < data.length(); i++) {
                 try {
                     if (data.getJSONObject(i).getBoolean("isCanceled") == filter) {
-
+                        root.removeAllViewsInLayout();
                         LinearLayout horiz = new LinearLayout(act);
                         LinearLayout.LayoutParams horizparam = new LinearLayout.LayoutParams(width+400, ViewGroup.LayoutParams.WRAP_CONTENT);
                         horizparam.setMargins(20, 20, 20, 80);
@@ -500,7 +528,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //End of second row (marsuleh code)
 
 
-                        System.out.println(data.getJSONObject(i).getString("status"));
                         //Start of third row(images!)
                         LinearLayout marsulests_lay = new LinearLayout(act);
                         LinearLayout.LayoutParams marsulests_layparam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -594,11 +621,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             reorder.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    final ProgressDialog prog = new ProgressDialog(act);
+                                    View loading;
+                                    LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    loading = pinflate.inflate(R.layout.loading, null);
+                                    loading.setBackgroundColor(Color.TRANSPARENT);
+                                    AlertDialog prog = new AlertDialog.Builder(act).create();
+                                    prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    prog.setInverseBackgroundForced(true);
+                                    prog.setView(loading);
                                     prog.setCancelable(false);
-                                    prog.setTitle("لطفا منتطر بمانید");
-                                    if (prog.isShowing())
-                                        prog.dismiss();
                                     prog.show();
                                     exec = Executors.newFixedThreadPool(2);
                                     exec.execute(new Runnable() {
@@ -627,7 +658,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
-                                            if (prog.isShowing())
                                                 prog.dismiss();
                                         }
                                     });
@@ -645,11 +675,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             delete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    final ProgressDialog prog = new ProgressDialog(act);
+                                    View loading;
+                                    LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    loading = pinflate.inflate(R.layout.loading, null);
+                                    loading.setBackgroundColor(Color.TRANSPARENT);
+                                    AlertDialog prog = new AlertDialog.Builder(act).create();
+                                    prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    prog.setInverseBackgroundForced(true);
+                                    prog.setView(loading);
                                     prog.setCancelable(false);
-                                    prog.setTitle("لطفا منتطر بمانید");
-                                    if (prog.isShowing())
-                                        prog.dismiss();
                                     prog.show();
                                     exec = Executors.newFixedThreadPool(2);
                                     exec.execute(new Runnable() {
@@ -676,7 +710,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
-                                            if (prog.isShowing())
                                                 prog.dismiss();
                                         }
                                     });
@@ -685,6 +718,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             final AnimatorSet mAnimationSet = new AnimatorSet();
                             pack.setOnTouchListener(new OnSwipeTouchListener(this){
+
+
+                                @Override
+                                public void onTouchDown() {
+                                    Intent goto_detail = new Intent(getApplicationContext(), First_Factor.class);
+                                    goto_detail.putExtra("detail", data.toString());
+                                    startActivity(goto_detail);
+                                    super.onTouchDown();
+                                }
+
                                 @Override
                                 public void onSwipeLeft() {
                                     if (delete.getAlpha() == 0) {
@@ -719,6 +762,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }else{
                             pack.setX(80);
                         }
+                        horiz.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent goto_detail = new Intent(getApplicationContext(),First_Factor.class);
+                                goto_detail.putExtra("detail",data.toString());
+                                startActivity(goto_detail);
+                            }
+                        });
                         horiz.addView(pack);
                         root.addView(horiz);
                     }

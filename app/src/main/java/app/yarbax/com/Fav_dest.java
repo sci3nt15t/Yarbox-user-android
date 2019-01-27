@@ -2,20 +2,26 @@ package app.yarbax.com;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,10 +54,27 @@ public class Fav_dest extends AppCompatActivity {
     MyDb db = new MyDb();
     Activity act;
     int id = 0;
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fav_dest);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText(" مقصد");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Intent i = getIntent();
         id = i.getIntExtra("id",0);
         act = this;
@@ -89,7 +112,7 @@ public class Fav_dest extends AppCompatActivity {
                     if (address.getText().length() > 0 && plaque.getText().length() > 0 && number.getText().length() > 0 && name.getText().length() > 0) {
                         if (id == 0) {
                             AlertDialog.Builder title = new AlertDialog.Builder(act);
-                            title.setTitle("لطفا عنوان ادرس را تعیین کنید");
+                            title.setTitle("لطفا عنوان آدرس را تعیین کنید");
                             final EditText text = new EditText(act);
                             text.setHint("عنوان");
                             title.setView(text);
@@ -134,11 +157,15 @@ public class Fav_dest extends AppCompatActivity {
     String selectedOstan;
     String selectedShahr;
     public void fetch_ostan(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        android.app.AlertDialog prog = new android.app.AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -163,17 +190,20 @@ public class Fav_dest extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });
     }
     public void fetch_shahr(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        android.app.AlertDialog prog = new android.app.AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -199,7 +229,6 @@ public class Fav_dest extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });

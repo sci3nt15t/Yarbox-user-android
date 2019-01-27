@@ -1,15 +1,24 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,11 +66,26 @@ public class PackDetail extends AppCompatActivity implements Serializable {
     GrayEditText count;
     Button ok;
     Activity act;
+    int money = 0;
     @Override
     protected void onCreate(Bundle savedinstace)
     {
         super.onCreate(savedinstace);
         setContentView(R.layout.packdetail);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("جزییات مرسوله");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Intent i = getIntent();
         act = this;
         newpack = (PostPack)i.getSerializableExtra("newpack");
@@ -91,6 +115,38 @@ public class PackDetail extends AppCompatActivity implements Serializable {
                     newpack.isPacking = false;
             }
         });
+        packprice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                packprice.removeTextChangedListener(this);
+                if (packprice.getText().length() > 0) {
+                    money = Integer.parseInt(packprice.getText().toString().replace(" تومان ", "").replace(",", ""));
+                    packprice.setText(String.format("%,.0f", (double) money) + " تومان ");
+                }
+                packprice.addTextChangedListener(this);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (packprice.getText().toString().length() > 0)
+                    money = Integer.parseInt(packprice.getText().toString().replace(" تومان ", "").replace(",", ""));
+
+            }
+        });
+        packprice.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_DEL)
+                {
+                    packprice.setText("");
+                }
+                return false;
+            }
+        });
         insurance.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
@@ -101,6 +157,7 @@ public class PackDetail extends AppCompatActivity implements Serializable {
                 else{
                     newpack.isInsurance = false;
                     packprice.setText("");
+                    money = 0;
                     packprice.setVisibility(View.INVISIBLE);
                 }
             }
@@ -119,7 +176,7 @@ public class PackDetail extends AppCompatActivity implements Serializable {
                             newpack.content = explain.getText().toString();
                         }
                         if (packprice.getText().toString().length() > 0)
-                        newpack.insurancePrice = Integer.parseInt(packprice.getText().toString());
+                        newpack.insurancePrice = money;
                         newpack.origin.explain = "ندارد";
                         newpack.count = Integer.parseInt(new extension().ReplaceArabicDigitsWithEnglish(count.getText().toString()));
                         if (newpack.weightId == 999)
@@ -175,11 +232,15 @@ public class PackDetail extends AppCompatActivity implements Serializable {
 
     }
     public void fetch_weights(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        AlertDialog prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -205,7 +266,6 @@ public class PackDetail extends AppCompatActivity implements Serializable {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });
@@ -213,6 +273,12 @@ public class PackDetail extends AppCompatActivity implements Serializable {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
+        Intent goto_selectsize = new Intent(this,SelectSize.class);
+        goto_selectsize.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(goto_selectsize);
+        finish();
+    }
+    public void goback(){
         Intent goto_selectsize = new Intent(this,SelectSize.class);
         goto_selectsize.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(goto_selectsize);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +36,11 @@ public class Fav_origin_view extends AppCompatActivity implements OnMapReadyCall
         finish();
     }
 
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),Fav_address.class);
+        startActivity(go_back);
+        finish();
+    }
     Double lat;
     Double lng;
     int id  = 0;
@@ -44,6 +50,20 @@ public class Fav_origin_view extends AppCompatActivity implements OnMapReadyCall
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.fav_origin_view);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("مبدا منتخب");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fav_origin_view_map);
         mapFragment.getMapAsync(this);

@@ -6,31 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl">
-
     <fragment
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map"
+        android:layout_marginTop="-50dp"
+        android:layout_marginBottom="-50dp"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 </fragment>
+
+    <include layout="@layout/toolbar"></include>
     <app.yarbax.com.MyViews.SigninEdittext
         android:id="@+id/maptext"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="70dp"
         android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:gravity="right"
         android:focusable="false"
         android:foregroundGravity="left"/>
-    <!--<ImageView-->
-        <!--android:id="@+id/map_search"-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:src="@mipmap/search"-->
-        <!--android:layout_toLeftOf="@id/maptext"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginTop="30dp"/>-->
     <ImageView
         android:layout_width="60dp"
         android:layout_height="70dp"
@@ -41,17 +37,18 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_above="@id/senderaddress_ok"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="30dp"
         android:src="@mipmap/crlocation"
         />
     <ImageView
         android:id="@+id/map_fav"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_above="@id/senderaddress_ok"
-        android:layout_marginBottom="5dp"
-        android:src="@mipmap/star"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:src="@mipmap/star_map"
         android:layout_alignParentLeft="true"
         />
     <Button

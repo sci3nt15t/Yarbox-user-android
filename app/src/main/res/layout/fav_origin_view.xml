@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <include layout="@layout/toolbar"></include>
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/fav_origin_view_map"

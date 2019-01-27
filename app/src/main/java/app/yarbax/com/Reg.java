@@ -35,10 +35,38 @@ public class Reg extends AppCompatActivity {
     Activity act;
     Executor exec = Executors.newFixedThreadPool(2);
     boolean isruleaccepted = false;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent goto_signin = new Intent(getApplicationContext(),Signin.class);
+        startActivity(goto_signin);
+        finish();
+    }
+
+    public void goback(){
+        Intent goto_signin = new Intent(getApplicationContext(),Signin.class);
+        startActivity(goto_signin);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reg);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("ثبت نام");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         this.act = this;
         final SigninEdittext edit_name = (SigninEdittext)findViewById(R.id.reg_name);
         final SigninEdittext edit_last = (SigninEdittext)findViewById(R.id.reg_last);

@@ -6,8 +6,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layoutDirection="rtl"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="10">
 
+        <include layout="@layout/toolbar"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         /** Start ferestande **/
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +56,7 @@
                 android:id="@+id/factor_send_addr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
+                android:minHeight="80dp"
                 android:focusable="false"
                 android:layout_margin="3dp"
                 android:gravity="top|right"
@@ -98,7 +105,7 @@
                 android:id="@+id/factor_rec_addr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
+                android:minHeight="80dp"
                 android:focusable="false"
                 android:layout_margin="3dp"
                 android:gravity="top|right"
@@ -118,7 +125,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:weightSum="2"
             android:orientation="horizontal">
             <TextView
@@ -195,18 +202,18 @@
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:layout_weight="1"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_weight="4"
+                android:layout_weight="5"
                 android:orientation="vertical"
                 android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.2"
                     android:orientation="horizontal"
                     android:gravity="center"
                     android:weightSum="2">
@@ -214,10 +221,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="18sp"
+                        android:gravity="center"
                         android:text="اعتبار : "/>
                     <app.yarbax.com.MyViews.GrayEditText
                         android:id="@+id/factor_cred"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:focusable="false"
@@ -229,7 +237,7 @@
                     android:id="@+id/factor_increase_cred"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.8"
                     android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
@@ -249,13 +257,14 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        </LinearLayout>
         <Button
             android:id="@+id/factor_ok"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@drawable/sendpacketcurve"
-            android:layout_marginTop="50dp"
             android:layout_marginBottom="-10dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/sendpacketcurve"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:textSize="18sp"

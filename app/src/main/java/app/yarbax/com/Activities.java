@@ -1,14 +1,19 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -53,11 +58,28 @@ public class Activities extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
         setContentView(R.layout.activities);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("فعالیت ها");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         mypref = getSharedPreferences("mypref",MODE_PRIVATE);
         root = (LinearLayout)findViewById(R.id.activity_root);
         act = this;
@@ -67,11 +89,15 @@ public class Activities extends AppCompatActivity {
         final Getter getactivities = new Getter();
             if (new CheckInternet().check())
             {
-                final ProgressDialog prog = new ProgressDialog(act);
+                View loading;
+                LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                loading = pinflate.inflate(R.layout.loading, null);
+                loading.setBackgroundColor(Color.TRANSPARENT);
+                AlertDialog prog = new AlertDialog.Builder(act).create();
+                prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                prog.setInverseBackgroundForced(true);
+                prog.setView(loading);
                 prog.setCancelable(false);
-                prog.setTitle("لطفا منتطر بمانید");
-                if (prog.isShowing())
-                    prog.dismiss();
                 prog.show();
                 exec = Executors.newFixedThreadPool(2);
                 exec.execute(new Runnable() {
@@ -103,7 +129,6 @@ public class Activities extends AppCompatActivity {
                             });
                             e.printStackTrace();
                         }
-                        if (prog.isShowing())
                             prog.dismiss();
 
                         getactivities.cancel(true);
@@ -139,14 +164,15 @@ public class Activities extends AppCompatActivity {
     public void setupcells(JSONArray json){
         root.removeAllViewsInLayout();
         ImageView no = new ImageView(act);
-        LinearLayout.LayoutParams no_param = new LinearLayout.LayoutParams(width/2,width/2);
+        LinearLayout.LayoutParams no_param = new LinearLayout.LayoutParams(width*4/10,width*4/10);
         no_param.gravity = Gravity.CENTER;
-        no_param.setMargins(0,150,0,0);
+        no_param.setMargins(0,350,0,0);
         no.setLayoutParams(no_param);
         no.setImageDrawable(getResources().getDrawable(R.mipmap.no_arrive));
         root.addView(no);
 
         LinearLayout.LayoutParams no_text_param = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        no_text_param.setMargins(0,30,0,0);
         TextView no_text = new TextView(act);
         no_text.setGravity(Gravity.CENTER);
         no_text.setTextSize(24);
@@ -225,7 +251,7 @@ public class Activities extends AppCompatActivity {
                     origin_text.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f));
                     origin_text.setGravity(Gravity.RIGHT);
                     origin_text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    origin_text.setText("ادرس مبدا: " );
+                    origin_text.setText("آدرس مبدا: " );
                     origin.addView(origin_text);
 
                     pack.addView(origin);
@@ -233,7 +259,9 @@ public class Activities extends AppCompatActivity {
 
                     //address e origin
                     TextView origin_address = new TextView(act);
-                    origin_address.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams dest_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    dest_param.setMargins(0,0,30,0);
+                    origin_address.setLayoutParams(dest_param);
                     origin_address.setGravity(Gravity.RIGHT);
                     origin_address.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                     origin_address.setText(json.getJSONObject(i).getString("origin") );
@@ -260,7 +288,7 @@ public class Activities extends AppCompatActivity {
                     dest_text.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f));
                     dest_text.setGravity(Gravity.RIGHT);
                     dest_text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    dest_text.setText("ادرس مقصد: " );
+                    dest_text.setText("آدرس مقصد: " );
                     dest.addView(dest_text);
 
                     pack.addView(dest);
@@ -268,7 +296,7 @@ public class Activities extends AppCompatActivity {
 
                     //address e origin
                     TextView dest_address = new TextView(act);
-                    dest_address.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    dest_address.setLayoutParams(dest_param);
                     dest_address.setGravity(Gravity.RIGHT);
                     dest_address.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                     dest_address.setText(json.getJSONObject(i).getString("destination") );
@@ -294,7 +322,7 @@ public class Activities extends AppCompatActivity {
                     price_text.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f));
                     price_text.setGravity(Gravity.RIGHT);
                     price_text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    price_text.setText("مبلغ: " + json.getJSONObject(i).getInt("price") );
+                    price_text.setText("مبلغ: " + String.format("%,.0f", (double) json.getJSONObject(i).getInt("price") ));
                     price.addView(price_text);
 
                     pack.addView(price);

@@ -6,6 +6,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="actionSheetStyle">@style/ActionSheetStyleiOS7</item>
+    </style>
+    <style name="HeaderBar">
+        <item name="android:background">#EBEBEB</item>
+    </style>
+    <style name="CustomDialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

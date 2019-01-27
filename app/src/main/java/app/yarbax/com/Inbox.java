@@ -1,14 +1,18 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -50,11 +54,28 @@ public class Inbox extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstace)
     {
         super.onCreate(SavedInstace);
         setContentView(R.layout.inbox);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("صندوق پیام");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         mypref = getSharedPreferences("mypref",MODE_PRIVATE);
         root = (LinearLayout)findViewById(R.id.inbox_root);
         act = this;
@@ -85,11 +106,15 @@ public class Inbox extends AppCompatActivity {
         final Getter getactivities = new Getter();
         if (new CheckInternet().check())
         {
-            final ProgressDialog prog = new ProgressDialog(act);
+            View loading;
+            LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            loading = pinflate.inflate(R.layout.loading, null);
+            loading.setBackgroundColor(Color.TRANSPARENT);
+            AlertDialog prog = new AlertDialog.Builder(act).create();
+            prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            prog.setInverseBackgroundForced(true);
+            prog.setView(loading);
             prog.setCancelable(false);
-            prog.setTitle("لطفا منتطر بمانید");
-            if (prog.isShowing())
-                prog.dismiss();
             prog.show();
             exec = Executors.newFixedThreadPool(2);
             exec.execute(new Runnable() {
@@ -121,7 +146,6 @@ public class Inbox extends AppCompatActivity {
                         });
                         e.printStackTrace();
                     }
-                    if (prog.isShowing())
                         prog.dismiss();
 
                     getactivities.cancel(true);

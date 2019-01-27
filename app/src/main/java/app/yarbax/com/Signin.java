@@ -3,13 +3,18 @@ package app.yarbax.com;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -77,9 +82,15 @@ public class Signin extends AppCompatActivity {
                             net.execute("http://api.yarbox.co/api/v1/account/retry-verify", "{\n" +
                                     "  \"phoneNumber\": \"" + finalphone + "\"\n" +
                                     "}");
-                            final ProgressDialog prog = new ProgressDialog(act);
+                            View loading;
+                            LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            loading = pinflate.inflate(R.layout.loading, null);
+                            loading.setBackgroundColor(Color.TRANSPARENT);
+                            AlertDialog prog = new AlertDialog.Builder(act).create();
+                            prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            prog.setInverseBackgroundForced(true);
+                            prog.setView(loading);
                             prog.setCancelable(false);
-                            prog.setTitle("لطفا منتطر بمانید");
                             prog.show();
                             exec = Executors.newFixedThreadPool(2);
                             exec.execute(new Runnable() {
@@ -92,7 +103,6 @@ public class Signin extends AppCompatActivity {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    prog.dismiss();
                                     boolean status = false;
                                     try {
                                         status = new JSONObject(net.mainresponse).getBoolean("isSuccess");
@@ -118,6 +128,7 @@ public class Signin extends AppCompatActivity {
                                         });
                                         e.printStackTrace();
                                     }
+                                    prog.dismiss();
                                 }
                             });
 

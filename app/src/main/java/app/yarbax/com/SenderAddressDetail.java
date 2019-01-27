@@ -3,12 +3,14 @@ package app.yarbax.com;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.suke.widget.SwitchButton;
 
@@ -38,12 +40,33 @@ public class SenderAddressDetail extends AppCompatActivity {
         startActivity(go_back);
         finish();
     }
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),SenderAddress.class);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedinstace)
     {
         super.onCreate(savedinstace);
         setContentView(R.layout.senderaddressdetail);
+
+        SharedPreferences pref = getSharedPreferences("mypref",MODE_PRIVATE);
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("اطلاعات فرستنده");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         Intent i = getIntent();
         newpack = (PostPack)i.getSerializableExtra("newpack");
@@ -53,15 +76,22 @@ public class SenderAddressDetail extends AppCompatActivity {
         plaque = (GrayEditText)findViewById(R.id.sender_plaque);
         plaque.setText(newpack.origin.plaque);
         phone = (GrayEditText) findViewById(R.id.sender_phone);
-        phone.setText(newpack.origin.senderPhoneNumber);
+        if (newpack.origin.senderPhoneNumber != null)
+            phone.setText(newpack.origin.senderPhoneNumber);
+        else
+            phone.setText(pref.getString("phone",""));
         ok = (Button)findViewById(R.id.sender_ok);
 
         SwitchButton add_fav = (SwitchButton)findViewById(R.id.sender_favorit);
+        if (i.getBooleanExtra("ischecked",false)) {
+            add_fav.setChecked(true);
+            add_fav.setEnabled(false);
+        }
         add_fav.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 AlertDialog.Builder title = new AlertDialog.Builder(act);
-                title.setTitle("لطفا عنوان ادرس را تعیین کنید");
+                title.setTitle("لطفا عنوان آدرس را تعیین کنید");
                 final EditText text = new EditText(act);
                 text.setHint("عنوان");
                 title.setView(text);
@@ -70,6 +100,7 @@ public class SenderAddressDetail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
+                        add_fav.setChecked(false);
                     }
                 });
                 title.setPositiveButton("تایید", new DialogInterface.OnClickListener() {

@@ -9,24 +9,8 @@
         android:layout_height="match_parent"
         android:layoutDirection="rtl"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:background="#CDCDCD"
-            android:gravity="center"
-            android:weightSum="10">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="10"
-                android:layout_height="match_parent"
-                android:text="جزییات بسته"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/header_text_size"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:gravity="center"/>
-        </LinearLayout>
+
+        <include layout="@layout/toolbar"></include>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +18,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:focusableInTouchMode="true"
             android:weightSum="10">
             <TextView
                 android:layout_width="0dp"
@@ -49,6 +34,7 @@
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
+                android:maxLength="5"
                 android:inputType="number"
                 android:hint="تعداد"/>
         </LinearLayout>
@@ -64,7 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="وزن بسته"
+                android:text="نوع بسته"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"/>
             <Spinner
@@ -130,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:maxLength="14"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
@@ -155,6 +142,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:maxLength="500"
             android:hint="اقلام و نوع آن
 مثال : ظرف شکستنی و ..."
             />
@@ -167,7 +155,7 @@
             android:textStyle="bold"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="80dp"
             android:background="@drawable/btn_curve"
             />
 

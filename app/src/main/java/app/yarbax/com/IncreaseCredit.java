@@ -1,10 +1,14 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
@@ -51,17 +56,33 @@ public class IncreaseCredit extends AppCompatActivity {
     String token;
     boolean isOpened = false;
 
-
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedinstance)
     {
         super.onCreate(savedinstance);
         setContentView(R.layout.increasecredit);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("افزایش اعتبار");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         SharedPreferences p = getSharedPreferences("mypref",MODE_PRIVATE);
         token = p.getString("token","");
         act = this;
         your_cred = (GrayEditText)findViewById(R.id.your_cred);
-        your_cred.setText( " اعتبار شما : " + p.getInt("credit",0) + " تومان ");
+        your_cred.setText( " اعتبار شما : " + String.format("%,.0f",(double)p.getInt("credit",0)) + " تومان ");
         bist = (TextView)findViewById(R.id.twenty);
         bist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,23 +169,6 @@ public class IncreaseCredit extends AppCompatActivity {
             }
         });
         price = (GrayEditText)findViewById(R.id.price);
-        price.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b)
-                price.setText("");
-            }
-        });
-        price.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (price.getText().length() > 0) {
-                    money = Integer.parseInt(price.getText().toString().replace(" تومان ", "").replace(",", ""));
-                    price.setText(String.format("%,.0f", (double) money) + " تومان ");
-                }
-                return false;
-            }
-        });
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -173,6 +177,12 @@ public class IncreaseCredit extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                price.removeTextChangedListener(this);
+                if (price.getText().length() > 0) {
+                    money = Integer.parseInt(price.getText().toString().replace(" تومان ", "").replace(",", ""));
+                    price.setText(String.format("%,.0f", (double) money) + " تومان ");
+                }
+                price.addTextChangedListener(this);
             }
 
             @Override
@@ -180,7 +190,16 @@ public class IncreaseCredit extends AppCompatActivity {
                 if (price.getText().toString().length() > 0)
                     money = Integer.parseInt(price.getText().toString().replace(" تومان ", "").replace(",", ""));
 
-
+            }
+        });
+        price.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_DEL)
+                {
+                    price.setText("");
+                }
+                return false;
             }
         });
         pay = (Button)findViewById(R.id.pay);
@@ -188,11 +207,15 @@ public class IncreaseCredit extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (money != 0) {
-                    final ProgressDialog prog = new ProgressDialog(act);
+                    View loading;
+                    LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    loading = pinflate.inflate(R.layout.loading, null);
+                    loading.setBackgroundColor(Color.TRANSPARENT);
+                    AlertDialog prog = new AlertDialog.Builder(act).create();
+                    prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    prog.setInverseBackgroundForced(true);
+                    prog.setView(loading);
                     prog.setCancelable(false);
-                    prog.setTitle("لطفا منتطر بمانید");
-                    if (prog.isShowing())
-                        prog.dismiss();
                     prog.show();
                     exec.execute(new Runnable() {
                         @Override
@@ -216,9 +239,7 @@ public class IncreaseCredit extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            if (prog.isShowing())
-                                prog.dismiss();
-                            prog.show();
+                            prog.dismiss();
                         }
                     });
                 }

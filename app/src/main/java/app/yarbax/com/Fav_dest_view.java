@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import app.yarbax.com.MyViews.GrayEditText;
 import app.yarbax.com.Utilities.MyDb;
@@ -24,6 +25,11 @@ public class Fav_dest_view extends AppCompatActivity {
         startActivity(go_back);
         finish();
     }
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),Fav_address.class);
+        startActivity(go_back);
+        finish();
+    }
 
 
     GrayEditText name;
@@ -37,6 +43,19 @@ public class Fav_dest_view extends AppCompatActivity {
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.fav_dest_view);
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("مقصد منتخب");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Intent i = getIntent();
         final int id = i.getIntExtra("id",0);
         name = (GrayEditText)findViewById(R.id.fav_dest_view_name);

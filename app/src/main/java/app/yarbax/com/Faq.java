@@ -15,6 +15,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
  * Created by shayanrhm on 1/18/19.
@@ -23,11 +24,28 @@ import android.widget.ScrollView;
 public class Faq extends AppCompatActivity{
     float mTouchPosition = 0f;
     float mReleasePosition = 0f;
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstance)
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.faq);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("سوالات متداول");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         ScrollView scroll = (ScrollView)findViewById(R.id.faq_scroll);
         final ImageView faq_logo = (ImageView)findViewById(R.id.faq_logo);
         scroll.setOnTouchListener(new View.OnTouchListener() {

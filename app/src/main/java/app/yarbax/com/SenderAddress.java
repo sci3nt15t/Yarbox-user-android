@@ -11,10 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cedarstudios.cedarmapssdk.CedarMaps;
 import com.cedarstudios.cedarmapssdk.listeners.ReverseGeocodeResultListener;
@@ -34,7 +36,7 @@ import app.yarbax.com.Utilities.MyDb;
  * Created by shayanrhm on 12/30/18.
  */
 
-public class SenderAddress extends FragmentActivity implements OnMapReadyCallback {
+public class SenderAddress extends AppCompatActivity implements OnMapReadyCallback {
 
 
     SigninEdittext maptext;
@@ -55,11 +57,31 @@ public class SenderAddress extends FragmentActivity implements OnMapReadyCallbac
         startActivity(go_back);
         finish();
     }
-
+    public void goback(){
+        Intent go_back = new Intent(this,PackDetail.class);
+        go_back.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedinstace) {
         super.onCreate(savedinstace);
         setContentView(R.layout.senderaddress);
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("انتخاب مبدا");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         pref = getSharedPreferences("mypref",MODE_PRIVATE);
         if (pref.getString("crlat","").length() > 0)
             lat = Double.parseDouble(pref.getString("crlat",""));
@@ -171,6 +193,7 @@ public class SenderAddress extends FragmentActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(pref.getString("crlat","")),Double.parseDouble(pref.getString("crlng",""))),15));
+        googleMap.setMyLocationEnabled(true);
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {

@@ -26,6 +26,9 @@ public class Help extends AppCompatActivity {
     public static final int[] images = {R.mipmap.yek,R.mipmap.dow,R.mipmap.se,R.mipmap.chahar,
             R.mipmap.panj,R.mipmap.shish,R.mipmap.haft,R.mipmap.hasht};
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
+    public void goback(){
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstace)
     {

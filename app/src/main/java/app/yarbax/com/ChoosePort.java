@@ -1,16 +1,22 @@
 package app.yarbax.com;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,11 +68,31 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
         startActivity(go_back);
         finish();
     }
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),ChooseReciever.class);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle savedinstace)
     {
         super.onCreate(savedinstace);
         setContentView(R.layout.chooseport);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("پورت مقصد");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         Intent i = getIntent();
         newpack = (PostPack) i.getSerializableExtra("newpack");
@@ -98,17 +124,22 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
                     newpack.destination.receiverName = rec_name.getText().toString();
                     newpack.destination.latitude = portlat;
                     newpack.destination.longitude = portlong;
-                    final ProgressDialog prog = new ProgressDialog(act);
+                    View loading;
+                    LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    loading = pinflate.inflate(R.layout.loading, null);
+                    loading.setBackgroundColor(Color.TRANSPARENT);
+                    AlertDialog prog = new AlertDialog.Builder(act).create();
+                    prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    prog.setInverseBackgroundForced(true);
+                    prog.setView(loading);
                     prog.setCancelable(false);
-                    prog.setTitle("لطفا منتطر بمانید");
-                    if (prog.isShowing())
-                        prog.dismiss();
                     prog.show();
                     exec.execute(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Poster post = new Poster();
+                                System.out.println(newpack.post());
                                 post.execute("http://api.yarbox.co/api/v1/packs",newpack.post(),token);
                                 post.get();
                                 factorKey = post.factorkey;
@@ -122,7 +153,6 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            if (prog.isShowing())
                                 prog.dismiss();
                         }
                     });
@@ -141,11 +171,15 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
     String portlong;
     int portid;
     public void fetch_ostan(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        AlertDialog prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -171,17 +205,20 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });
     }
     public void fetch_shahr(){
-        final ProgressDialog prog = new ProgressDialog(this);
+        View loading;
+        LayoutInflater pinflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        loading = pinflate.inflate(R.layout.loading, null);
+        loading.setBackgroundColor(Color.TRANSPARENT);
+        AlertDialog prog = new AlertDialog.Builder(act).create();
+        prog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        prog.setInverseBackgroundForced(true);
+        prog.setView(loading);
         prog.setCancelable(false);
-        prog.setTitle("لطفا منتطر بمانید");
-        if (prog.isShowing())
-            prog.dismiss();
         prog.show();
         exec.execute(new Runnable() {
             @Override
@@ -208,7 +245,6 @@ public class ChoosePort extends AppCompatActivity implements OnMapReadyCallback 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (prog.isShowing())
                     prog.dismiss();
             }
         });

@@ -27,7 +27,17 @@ public class Select_Fav_dest extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
+        Intent go_back = new Intent(getApplicationContext(),RecieverAddressDetail.class);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
 
+    }
+    public void goback(){
+        Intent go_back = new Intent(getApplicationContext(),RecieverAddressDetail.class);
+        go_back.putExtra("newpack",newpack);
+        startActivity(go_back);
+        finish();
     }
 
     @Override
@@ -35,6 +45,20 @@ public class Select_Fav_dest extends AppCompatActivity {
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.select_fav_dest);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("انتخاب آدرس متخب");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Intent i = getIntent();
         newpack = (PostPack) i.getSerializableExtra("newpack");
         act = this;
@@ -61,16 +85,16 @@ public class Select_Fav_dest extends AppCompatActivity {
                 TextView title = new TextView(act);
                 title.setPadding(0, 10, 30, 0);
                 title.setText("عنوان : " + crs.getString(0));
-                title.setTextColor(Color.BLACK);
+                title.setTextColor(Color.DKGRAY);
                 title.setTextSize(20);
                 pack.addView(title);
 
                 TextView address = new TextView(act);
                 address.setPadding(0, 10, 30, 0);
-                address.setTextColor(Color.BLACK);
+                address.setTextColor(Color.DKGRAY);
                 address.setTextSize(20);
                 address.setTextDirection(View.TEXT_DIRECTION_RTL);
-                address.setText("ادرس‌ : " + crs.getString(1) + " - " + crs.getString(2) + " - " + crs.getString(3));
+                address.setText("آدرس‌ : " + crs.getString(1) + " - " + crs.getString(2) + " - " + crs.getString(3));
                 pack.addView(address);
 
                 int address_index = crs.getColumnIndex("address");
@@ -98,6 +122,7 @@ public class Select_Fav_dest extends AppCompatActivity {
                         newpack.destination.receiverName = name_str;
                         Intent goto_origin_view = new Intent(getApplicationContext(), RecieverAddressDetail.class);
                         goto_origin_view.putExtra("newpack", newpack);
+                        goto_origin_view.putExtra("ischecked",true);
                         startActivity(goto_origin_view);
                         finish();
 

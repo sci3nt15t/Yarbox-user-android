@@ -8,6 +8,8 @@
         android:orientation="vertical"
         >
 
+        <include layout="@layout/toolbar"></include>
+
         <app.yarbax.com.MyViews.GrayEditText
             android:id="@+id/fav_dest_view_name"
             android:layout_width="match_parent"

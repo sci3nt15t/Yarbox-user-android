@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.stream.Stream;
 
@@ -38,11 +39,33 @@ public class Fav_origin_detail extends AppCompatActivity {
         startActivity(goto_fav_origin_map);
         finish();
     }
+
+    public void goback(){
+        Intent goto_fav_origin_map = new Intent(act,Fav_origin_map.class);
+        if (id != 0)
+            goto_fav_origin_map.putExtra("id",id);
+        startActivity(goto_fav_origin_map);
+        finish();
+    }
     @Override
     protected void onCreate(Bundle SavedInstance)
     {
         super.onCreate(SavedInstance);
         setContentView(R.layout.fav_origin_detail);
+
+        android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
+        tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
+        TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
+        setSupportActionBar(tool);
+        tool.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked!");
+                goback();
+            }
+        });
+        toolbar_title.setText("کجا هستید؟");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         act = this;
         Intent i = getIntent();
         id = i.getIntExtra("id",0);
@@ -72,7 +95,7 @@ public class Fav_origin_detail extends AppCompatActivity {
                 {
                     if (id == 0) {
                         AlertDialog.Builder title = new AlertDialog.Builder(act);
-                        title.setTitle("لطفا عنوان ادرس را تعیین کنید");
+                        title.setTitle("لطفا عنوان آدرس را تعیین کنید");
                         final EditText text = new EditText(act);
                         text.setHint("عنوان");
                         title.setView(text);
