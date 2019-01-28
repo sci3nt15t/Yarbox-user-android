@@ -140,6 +140,7 @@ public class Approve extends AppCompatActivity {
                                         mypref.putString("phone", phone);
                                         mypref.putString("crlat",35.705655+"");
                                         mypref.putString("crlng",51.390319+"");
+                                        mypref.putString("reagent",info.getString("reagentCode"));
                                         mypref.commit();
                                         prog.dismiss();
                                         Intent gotomain = new Intent(getApplicationContext(), MainActivity.class);
@@ -158,7 +159,7 @@ public class Approve extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            new MyAlert(act,"خطا!","کد ارسال شده درست نمیباشد!");
+                                            new MyAlert(act,"خطا!","خطا در دریافت!");
                                         }
                                     });
                                     e.printStackTrace();

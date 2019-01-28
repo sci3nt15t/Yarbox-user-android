@@ -85,6 +85,26 @@
                         android:hint="@string/put_your_number"
                         />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:weightSum="100">
+                    <app.yarbax.com.MyViews.SigninEdittext
+                        android:id="@+id/reg_reagent"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="85"
+                        android:textAlignment="center"
+                        android:background="#ebeced"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:textSize="@dimen/edittext_size"
+                        android:hint="کد معرف (در صورت وجود)"
+                        />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/reg_btn"

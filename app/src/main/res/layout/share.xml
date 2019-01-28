@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
                     android:textSize="14sp"
                     android:layout_gravity="center"
                     android:textAlignment="viewStart"

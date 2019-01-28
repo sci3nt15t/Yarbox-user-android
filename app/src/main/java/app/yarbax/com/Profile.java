@@ -63,6 +63,10 @@ public class Profile extends AppCompatActivity {
         String email = pref.getString("email","");
         String number = pref.getString("phone","");
 
+        TextView profile_name = (TextView)findViewById(R.id.profile_name);
+        profile_name.setText(name);
+        TextView profile_point = (TextView)findViewById(R.id.profile_point);
+        profile_point.setText(pref.getInt("score",0)+"");
         TextView name_edit = (TextView)findViewById(R.id.profile_edit_name);
         name_edit.setText(name);
         TextView email_edit = (TextView)findViewById(R.id.profile_edit_email);

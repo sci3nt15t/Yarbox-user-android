@@ -1,6 +1,7 @@
 package app.yarbax.com;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,6 +19,7 @@ public class Share extends AppCompatActivity {
         super.onCreate(savedinstance);
         setContentView(R.layout.share);
 
+        SharedPreferences pref = getSharedPreferences("mypref",MODE_PRIVATE);
         android.support.v7.widget.Toolbar tool = (android.support.v7.widget.Toolbar)findViewById(R.id.my_toolbar);
         tool.setNavigationIcon(getResources().getDrawable(R.mipmap.back));
         TextView toolbar_title = (TextView)findViewById(R.id.toolbar_title);
@@ -37,7 +39,9 @@ public class Share extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(android.content.Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(android.content.Intent.EXTRA_TEXT, "سلام یارباکس اپلیکیشن سریع، ساده و کم هزینه ایست که من برای ارسال خرده بار هام به شهرهای مختلف ازش استفاده می کنم. به شما هم پیشنهاد می کنم از طریق سایت http://www.yarbox.co یارباکس رو دانلود کنی");
+                i.putExtra(android.content.Intent.EXTRA_TEXT, "سلام یارباکس اپلیکیشن سریع، ساده و کم هزینه ایست که من برای ارسال خرده بار هام به شهرهای مختلف ازش استفاده می کنم. به شما هم پیشنهاد می کنم از طریق سایت http://www.yarbox.co یارباکس رو دانلود کنی" +
+                        "\n\nکد معرف : "+pref.getString("reagent","")+
+                "\n\nhttps://yarbox.co/account/sign-up?ReagentCode="+pref.getString("reagent",""));
                 startActivity(i);
             }
         });

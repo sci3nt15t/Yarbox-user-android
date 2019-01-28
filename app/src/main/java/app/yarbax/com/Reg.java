@@ -71,6 +71,7 @@ public class Reg extends AppCompatActivity {
         final SigninEdittext edit_name = (SigninEdittext)findViewById(R.id.reg_name);
         final SigninEdittext edit_last = (SigninEdittext)findViewById(R.id.reg_last);
         final SigninEdittext edit_phone = (SigninEdittext)findViewById(R.id.reg_phone);
+        final SigninEdittext reagent = (SigninEdittext)findViewById(R.id.reg_reagent);
         final Button regbtn = (Button)findViewById(R.id.reg_btn);
 
         regbtn.setClickable(false);
@@ -85,8 +86,8 @@ public class Reg extends AppCompatActivity {
                     net.execute("http://api.yarbox.co/api/v1/account/register","{\n" +
                             "  \"phoneNumber\": \""+phone+"\",\n" +
                             "  \"firstName\": \""+name+"\",\n" +
-                            "  \"lastName\": \""+last+"\"\n" +
-                            "}");
+                            "  \"lastName\": \""+last+"\",\n" +
+                            " \"reagentCode\": \""+reagent.getText().toString()+"\" }");
                     final ProgressDialog progress = new ProgressDialog(act);
                     progress.setTitle("لطفا منتظر باشید");
                     progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
@@ -113,15 +114,34 @@ public class Reg extends AppCompatActivity {
                                     startActivity(goto_login);
                                     finish();
                                 }else{
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                    if (issuccess.getString("errorMessage").toLowerCase().contains("already"))
+                                    {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
 
-                                            new MyAlert(act,"خطا!","این شماره قبلا ثبت نام شده!");
-                                        }
-                                    });
+                                                new MyAlert(act, "خطا!", "این شماره قبلا ثبت نام شده!");
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                new MyAlert(act, "خطا!", "کد معرف درست نیست!");
+                                            }
+                                        });
+                                    }
                                 }
                             }catch(JSONException e){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        new MyAlert(act, "خطا!", "کد معرف درست نیست!");
+                                    }
+                                });
                                 e.printStackTrace();
                             }
                             if(progress.isShowing())

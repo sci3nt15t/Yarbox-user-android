@@ -158,44 +158,47 @@ public class Reports extends AppCompatActivity {
                 });
 
             }
+            prog.dismiss();
 
     }
     public void setup_reports(String json_str){
         root.removeAllViewsInLayout();
         try {
             JSONArray items = new JSONObject(json_str).getJSONArray("items");
-            if (items.length() > 0) {
-                for (int i = 0; i < items.length(); i++) {
-                    int packid = items.getJSONObject(i).getInt("packId");
-                    String payment_type = items.getJSONObject(i).getString("type");
-                    int price = items.getJSONObject(i).getInt("price");
-                    String createdon = items.getJSONObject(i).getString("createdOn");
+            if (items != null) {
+                if (items.length() > 0) {
+                    for (int i = 0; i < items.length(); i++) {
+                        int packid = items.getJSONObject(i).getInt("packId");
+                        String payment_type = items.getJSONObject(i).getString("type");
+                        int price = items.getJSONObject(i).getInt("price");
+                        String createdon = items.getJSONObject(i).getString("createdOn");
 
-                    LinearLayout.LayoutParams images_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    View v;
-                    LayoutInflater inflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = inflate.inflate(R.layout.reportcell, null);
-                    v.setLayoutParams(images_param);
-                    TextView cell_date = (TextView) v.findViewById(R.id.cell_date);
-                    Date itemDate = new Date((long)(Double.parseDouble(createdon)*1000));
-                    String myDateStr = new SimpleDateFormat("yyyy-MM-dd").format(itemDate);
-                    DateConverter converter = new DateConverter();
-                    converter.gregorianToPersian(Integer.parseInt(myDateStr.substring(0,4)), Integer.parseInt(myDateStr.substring(5,7)), Integer.parseInt(myDateStr.substring(8,10)));
-                    String completedate = converter.getYear() + "/" + converter.getMonth() + "/" + converter.getDay();
-                    cell_date.setText(completedate);
-                    TextView cell_price = (TextView) v.findViewById(R.id.report_cell_price);
-                    cell_price.setText(String.format("%,.0f", (double) price));
-                    TextView cell_type = (TextView) v.findViewById(R.id.cell_type);
-                    if (payment_type.contains("debtor"))
-                        cell_type.setText("واریز");
-                    else
-                        cell_type.setText("برداشت");
-                    TextView cell_code = (TextView) v.findViewById(R.id.cell_code);
-                    if (packid == 0)
-                        cell_code.setText("ندارد");
-                    else
-                        cell_code.setText(packid + "");
-                    root.addView(v);
+                        LinearLayout.LayoutParams images_param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        View v;
+                        LayoutInflater inflate = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        v = inflate.inflate(R.layout.reportcell, null);
+                        v.setLayoutParams(images_param);
+                        TextView cell_date = (TextView) v.findViewById(R.id.cell_date);
+                        Date itemDate = new Date((long) (Double.parseDouble(createdon) * 1000));
+                        String myDateStr = new SimpleDateFormat("yyyy-MM-dd").format(itemDate);
+                        DateConverter converter = new DateConverter();
+                        converter.gregorianToPersian(Integer.parseInt(myDateStr.substring(0, 4)), Integer.parseInt(myDateStr.substring(5, 7)), Integer.parseInt(myDateStr.substring(8, 10)));
+                        String completedate = converter.getYear() + "/" + converter.getMonth() + "/" + converter.getDay();
+                        cell_date.setText(completedate);
+                        TextView cell_price = (TextView) v.findViewById(R.id.report_cell_price);
+                        cell_price.setText(String.format("%,.0f", (double) price));
+                        TextView cell_type = (TextView) v.findViewById(R.id.cell_type);
+                        if (payment_type.contains("debtor"))
+                            cell_type.setText("واریز");
+                        else
+                            cell_type.setText("برداشت");
+                        TextView cell_code = (TextView) v.findViewById(R.id.cell_code);
+                        if (packid == 0)
+                            cell_code.setText("ندارد");
+                        else
+                            cell_code.setText(packid + "");
+                        root.addView(v);
+                    }
                 }
             }
         } catch (JSONException e) {

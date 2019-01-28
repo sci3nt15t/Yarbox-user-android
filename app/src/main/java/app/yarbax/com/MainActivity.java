@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     p.putInt("score",score);
                     p.putInt("credit",credit);
                     p.commit();
+                    p.apply();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -464,11 +465,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
             no_text.setText("مرسوله ی ناموفقی وجود ندارد!");
         root.addView(no_text);
+        int b = 0;
         if (data.length() > 0) {
             for (int i = 0; i < data.length(); i++) {
                 try {
                     if (data.getJSONObject(i).getBoolean("isCanceled") == filter) {
-                        if (i == 0) root.removeAllViewsInLayout();
+                        if (b == 0) root.removeAllViewsInLayout();
                         LinearLayout horiz = new LinearLayout(act);
                         LinearLayout.LayoutParams horizparam = new LinearLayout.LayoutParams(width+400, ViewGroup.LayoutParams.WRAP_CONTENT);
                         horizparam.setMargins(20, 20, 20, 80);
@@ -773,6 +775,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
                         horiz.addView(pack);
                         root.addView(horiz);
+                        b++;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
